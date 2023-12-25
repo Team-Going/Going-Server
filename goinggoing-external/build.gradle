@@ -1,0 +1,11 @@
+dependencies {
+    implementation project(path: ':goinggoing-common')
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}

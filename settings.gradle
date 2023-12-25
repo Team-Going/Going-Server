@@ -1,0 +1,5 @@
+rootProject.name = 'goinggoing'
+include 'goinggoing-api'
+include 'goinggoing-domain'
+include 'goinggoing-common'
+include 'goinggoing-external'
