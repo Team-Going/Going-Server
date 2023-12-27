@@ -31,4 +31,4 @@ jobs:
         run: chmod +x gradlew
 
       - name: ✔️ build gradlew
-        run: ./gradlew goinggoing-api:build -x test
+        run: ./gradlew doorip-api:build -x test

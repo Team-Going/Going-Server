@@ -1,0 +1,11 @@
+dependencies {
+    implementation project(path: ':doorip-common')
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}

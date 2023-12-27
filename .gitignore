@@ -40,4 +40,4 @@ out/
 .DS_Store
 
 ### Yml ###
-goinggoing-api/src/main/resources/application.yml
+doorip-api/src/main/resources/application.yml
