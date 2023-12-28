@@ -26,7 +26,7 @@
 
 <div align=center>
   
-<img width="800" src="https://github.com/Team-Going/Going-Server/assets/81796317/e7cde276-27a3-45db-a23c-a002c55ad117">
+<img width="943" src="https://github.com/Team-Going/Going-Server/assets/81796317/110fbd69-eb78-449e-b386-ccb0eda6362e">
 
 </div>
 
