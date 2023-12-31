@@ -1,4 +1,4 @@
-package org.doorip;
+package org.doorip.common;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
