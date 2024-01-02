@@ -1,9 +1,14 @@
 #  Doorip
 
 ## Contributors ✨
+
+<div align=center>
+  
 | [@SunwoongH](https://github.com/SunwoongH) | [@gardening-y](https://github.com/gardening-y) |
 | :---: | :---: |
-|||
+|<img width="350" src="https://github.com/Team-Going/Going-Server/assets/81796317/e035acec-766f-4776-9172-f62e45c9c505">|<img width="350" src="https://github.com/Team-Going/Going-Server/assets/81796317/902f1481-7256-4a66-a8ff-7d069efcd3ea">|
+
+</div>
 
 <br>
 
@@ -12,12 +17,12 @@
 
 <br>
 
-## Git Convention 📝
+## Git Convention 📋
 [고잉고잉 서버 팀의 깃 컨벤션이 궁금하다면? ✔️](https://goinggoing.notion.site/Git-Convention-b52cb0e9151e48b3a609b45da8524c72?pvs=4)
 
 <br>
 
-## Code Convention 📝
+## Code Convention 📋
 [고잉고잉 서버 팀의 코드 컨벤션이 궁금하다면? ✔️](https://goinggoing.notion.site/Code-Convention-915632b532004eeb8352e82ea4386016?pvs=4)
 
 <br>
@@ -36,7 +41,7 @@
 
 <div align=center>
   
-<img width="800" src="https://github.com/Team-Going/Going-Server/assets/81796317/5d499c87-b3e8-4c70-ab10-56ba7319f190">
+<img width="800" src="https://github.com/Team-Going/Going-Server/assets/81796317/f1dd819c-0fce-46cb-83ed-ebe1d2fa89bc">
 
 </div>
 
