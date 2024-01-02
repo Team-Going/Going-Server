@@ -6,7 +6,7 @@
   
 | [@SunwoongH](https://github.com/SunwoongH) | [@gardening-y](https://github.com/gardening-y) |
 | :---: | :---: |
-|<img width="350" src="https://github.com/Team-Going/Going-Server/assets/81796317/e035acec-766f-4776-9172-f62e45c9c505">|<img width="350" src="https://github.com/Team-Going/Going-Server/assets/81796317/902f1481-7256-4a66-a8ff-7d069efcd3ea">|
+|<img width="300" src="https://github.com/Team-Going/Going-Server/assets/81796317/e035acec-766f-4776-9172-f62e45c9c505">|<img width="300" src="https://github.com/Team-Going/Going-Server/assets/81796317/902f1481-7256-4a66-a8ff-7d069efcd3ea">|
 
 </div>
 
@@ -41,7 +41,7 @@
 
 <div align=center>
   
-<img width="750" src="https://github.com/Team-Going/Going-Server/assets/81796317/f1dd819c-0fce-46cb-83ed-ebe1d2fa89bc">
+<img width="750" src="https://github.com/Team-Going/Going-Server/assets/81796317/dd3244b3-e732-4bd3-9e66-d1d1d8df4029">
 
 </div>
 
