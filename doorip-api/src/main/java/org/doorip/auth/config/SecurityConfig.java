@@ -38,11 +38,10 @@ public class SecurityConfig {
                 .exceptionHandling(exceptionHandlingConfigurer ->
                         exceptionHandlingConfigurer
                                 .authenticationEntryPoint(jwtAuthenticationEntryPoint))
-                .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> {
-                    authorizationManagerRequestMatcherRegistry
-                            .anyRequest()
-                            .authenticated();
-                })
+                .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
+                        authorizationManagerRequestMatcherRegistry
+                                .anyRequest()
+                                .authenticated())
                 .addFilterBefore(new JwtAuthenticationFilter(jwtValidator, jwtProvider), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new ExceptionHandlerFilter(), JwtAuthenticationFilter.class)
                 .build();
