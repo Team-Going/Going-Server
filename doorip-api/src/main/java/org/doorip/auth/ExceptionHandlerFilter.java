@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.doorip.common.ApiResponse;
 import org.doorip.common.Constants;
 import org.doorip.exception.UnauthorizedException;
@@ -15,6 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+@Slf4j
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -25,7 +27,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         } catch (UnauthorizedException e) {
             handleUnauthorizedException(response, e);
         } catch (Exception ee) {
-            handleException(response);
+            handleException(response, ee);
         }
     }
 
@@ -36,7 +38,8 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         setResponse(response, httpStatus, errorMessage);
     }
 
-    private void handleException(HttpServletResponse response) throws IOException {
+    private void handleException(HttpServletResponse response, Exception e) throws IOException {
+        log.error(">>> Exception Handler Filter : ", e);
         setResponse(response, HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessage.INTERNAL_SERVER_ERROR);
     }
 
