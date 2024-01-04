@@ -1,7 +1,7 @@
 create table users
 (
     created_date       timestamp(6),
-    last_modified_date  timestamp(6),
+    last_modified_date timestamp(6),
     user_id            bigint auto_increment,
     name               varchar(255) not null,
     intro              varchar(255) not null,
@@ -15,7 +15,7 @@ create table users
 create table trip
 (
     created_date       timestamp(6),
-    last_modified_date  timestamp(6),
+    last_modified_date timestamp(6),
     trip_id            bigint auto_increment,
     title              varchar(255) not null,
     start_date         date         not null,
@@ -27,7 +27,7 @@ create table trip
 create table participant
 (
     created_date       timestamp(6),
-    last_modified_date  timestamp(6),
+    last_modified_date timestamp(6),
     participant_id     bigint auto_increment,
     user_id            bigint unique,
     trip_id            bigint unique,
@@ -45,7 +45,7 @@ create table participant
 create table todo
 (
     created_date       timestamp(6),
-    last_modified_date  timestamp(6),
+    last_modified_date timestamp(6),
     todo_id            bigint auto_increment,
     trip_id            bigint unique,
     title              varchar(255) not null,
@@ -60,7 +60,7 @@ create table todo
 create table allocator
 (
     created_date       timestamp(6),
-    last_modified_date  timestamp(6),
+    last_modified_date timestamp(6),
     allocator_id       bigint auto_increment,
     participant_id     bigint unique,
     todo_id            bigint unique,
