@@ -41,7 +41,7 @@
 
 <div align=center>
   
-<img width="750" src="https://github.com/Team-Going/Going-Server/assets/81796317/dd3244b3-e732-4bd3-9e66-d1d1d8df4029">
+<img width="750" src="https://github.com/Team-Going/Going-Server/assets/81796317/8c26c30f-a690-4261-8424-5322a6b4b6ea">
 
 </div>
 
