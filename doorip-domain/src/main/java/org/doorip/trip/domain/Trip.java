@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 public class Trip extends BaseTimeEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "trip_id")
     private Long id;
     @Column(nullable = false)

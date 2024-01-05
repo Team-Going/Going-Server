@@ -19,15 +19,15 @@ public class Participant extends BaseTimeEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "style_a")
     private Integer styleA;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "style_b")
     private Integer styleB;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "style_c")
     private Integer styleC;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "style_d")
     private Integer styleD;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "style_e")
     private Integer styleE;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

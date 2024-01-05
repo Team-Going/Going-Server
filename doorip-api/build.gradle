@@ -8,6 +8,8 @@ dependencies {
     implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation "org.flywaydb:flyway-core"
+    implementation "org.flywaydb:flyway-mysql"
     implementation project(path: ':doorip-domain')
     implementation project(path: ':doorip-external')
     implementation project(path: ':doorip-common')
