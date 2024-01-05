@@ -20,7 +20,7 @@ public class AppleIdentityTokenParser {
 
     public Map<String, String> parseHeaders(String identityToken) {
         try {
-            String encoded = identityToken.split("\\.")[0];;
+            String encoded = identityToken.split("\\.")[0];
             String decoded = new String(Base64.getUrlDecoder().decode(encoded), StandardCharsets.UTF_8);
             return OBJECT_MAPPER.readValue(decoded, Map.class);
         } catch (JsonProcessingException | ArrayIndexOutOfBoundsException e) {
