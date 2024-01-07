@@ -65,7 +65,7 @@
 | Authentication | Spring Security, JSON Web Tokens |
 | Orm | Spring Data JPA |
 | Database | MySQL |
-| External | AWS EC2, AWS RDS, Docker, Docker-Compose, Redis |
+| External | AWS EC2, AWS RDS, Nginx, Docker, Docker-Compose, Redis |
 | CI/CD | Github Action |
 | API Docs | Notion, Swagger |
 | Other Tool | Discord, Postman, Figma |
