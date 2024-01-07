@@ -1,4 +1,13 @@
-#  Doorip
+#  Doorip ✈️
+> ## 서로를 이해하며 완성해가는 우리의 여행 To-do, Doorip
+>
+> 여행자 10명 중 6명은 여행을 같이 간 사람과 갈등을 겪고, 다음 여행에서는 누군가와 함께 하는 여행 자체를 망설이게 됩니다. 
+> 고잉고잉은 이 문제를 해결할, 쉽고 재밌는 솔루션을 만드는 팀입니다. 
+>
+> Doorip에서 여행에서 공동 할일 관리에 대한 불편과 부담을 내려놓고 좋아하는 사람들과 여행을 오롯이 즐기세요.
+> 여행 중에 생기는 모든 할 일을 함께 관리하세요. 두립의 여행 취향 테스트와 프로필 기능으로 서로를 이해할 수 있어요.
+
+<br>
 
 ## Contributors ✨
 
@@ -44,5 +53,21 @@
 <img width="750" src="https://github.com/Team-Going/Going-Server/assets/81796317/8c26c30f-a690-4261-8424-5322a6b4b6ea">
 
 </div>
+
+<br>
+
+## Teck Stack ✨
+
+| IDE | IntelliJ |
+|:---|:---|
+| Language | Java 17 |
+| Framework | Spring Boot 3.1.7, Gradle |
+| Authentication | Spring Security, JSON Web Tokens |
+| Orm | Spring Data JPA |
+| Database | MySQL |
+| External | AWS EC2, AWS RDS, Docker, Docker-Compose, Redis |
+| CI/CD | Github Action |
+| API Docs | Notion, Swagger |
+| Other Tool | Discord, Postman, Figma |
 
 <br>
