@@ -33,4 +33,8 @@ public class User extends BaseTimeEntity {
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Participant> participants = new ArrayList<>();
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 }

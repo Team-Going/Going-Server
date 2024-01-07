@@ -12,6 +12,7 @@ public enum ErrorMessage {
      * 400 Bad Request
      */
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "e4000", "잘못된 요청입니다."),
+    INVALID_PLATFORM_TYPE(HttpStatus.BAD_REQUEST, "e4001", "유효하지 않은 플랫폼 타입입니다."),
 
     /**
      * 401 Unauthorized
@@ -40,6 +41,7 @@ public enum ErrorMessage {
      * 404 Not Found
      */
     ENTITY_NOT_FOUND(HttpStatus.NOT_FOUND, "e4040", "대상을 찾을 수 없습니다."),
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "e4041", "존재하지 않는 회원입니다."),
 
     /**
      * 405 Method Not Allowed
