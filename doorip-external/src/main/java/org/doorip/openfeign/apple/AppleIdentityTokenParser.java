@@ -13,7 +13,6 @@ import java.security.PublicKey;
 import java.util.Base64;
 import java.util.Map;
 
-
 @Component
 public class AppleIdentityTokenParser {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
