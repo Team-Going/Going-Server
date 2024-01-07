@@ -5,6 +5,7 @@ import org.doorip.auth.UserId;
 import org.doorip.common.ApiResponse;
 import org.doorip.common.ApiResponseUtil;
 import org.doorip.message.SuccessMessage;
+import org.doorip.user.dto.request.UserReissueRequest;
 import org.doorip.user.dto.request.UserSignInRequest;
 import org.doorip.user.dto.request.UserSignUpRequest;
 import org.doorip.user.dto.response.UserResponse;
@@ -13,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import static org.doorip.common.Constants.AUTHORIZATION;
+
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
 @Controller
@@ -20,14 +23,14 @@ public class UserApiController {
     private final UserService userService;
 
     @PostMapping("/signin")
-    public ResponseEntity<ApiResponse<?>> signIn(@RequestHeader("Authorization") final String token,
+    public ResponseEntity<ApiResponse<?>> signIn(@RequestHeader(AUTHORIZATION) final String token,
                                                  @RequestBody final UserSignInRequest request) {
         final UserResponse response = userService.signIn(token, request);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<ApiResponse<?>> signUp(@RequestHeader("Authorization") final String token,
+    public ResponseEntity<ApiResponse<?>> signUp(@RequestHeader(AUTHORIZATION) final String token,
                                                  @RequestBody final UserSignUpRequest request) {
         final UserResponse response = userService.signUp(token, request);
         return ApiResponseUtil.success(SuccessMessage.CREATED, response);
@@ -43,5 +46,12 @@ public class UserApiController {
     public ResponseEntity<ApiResponse<?>> withdraw(@UserId final Long userId) {
         userService.withdraw(userId);
         return ApiResponseUtil.success(SuccessMessage.OK);
+    }
+
+    @PostMapping("/reissue")
+    public ResponseEntity<ApiResponse<?>> reissue(@RequestHeader(AUTHORIZATION) final String refreshtoken,
+                                                  @RequestBody final UserReissueRequest request) {
+        UserResponse response = userService.reissue(refreshtoken, request);
+        return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 }
