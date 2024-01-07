@@ -24,6 +24,12 @@ public enum ErrorMessage {
     INVALID_REFRESH_TOKEN_VALUE(HttpStatus.UNAUTHORIZED, "e4015", "리프레시 토큰의 값이 올바르지 않습니다."),
     EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "e4016", "리프레시 토큰이 만료되었습니다. 다시 로그인해 주세요."),
     MISMATCH_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "e4017", "리프레시 토큰이 일치하지 않습니다."),
+    INVALID_IDENTITY_TOKEN(HttpStatus.UNAUTHORIZED, "e4018", "애플 아이덴티티 토큰의 형식이 올바르지 않습니다."),
+    INVALID_IDENTITY_TOKEN_VALUE(HttpStatus.UNAUTHORIZED, "e4019", "애플 아이덴티티 토큰의 값이 올바르지 않습니다."),
+    UNABLE_TO_CREATE_APPLE_PUBLIC_KEY(HttpStatus.UNAUTHORIZED, "e40110", "애플 로그인 중 퍼블릭 키 생성에 문제가 발생했습니다."),
+    EXPIRED_IDENTITY_TOKEN(HttpStatus.UNAUTHORIZED, "e40111", "애플 로그인 중 아이덴티티 토큰의 유효 기간이 만료되었습니다."),
+    INVALID_IDENTITY_TOKEN_CLAIMS(HttpStatus.UNAUTHORIZED, "e40112", "애플 아이덴터티 토큰의 클레임 값이 올바르지 않습니다."),
+    INVALID_KAKAO_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "e40113", "카카오 액세스 토큰의 정보를 조회하는 과정에서 오류가 발생하였습니다."),
 
     /**
      * 403 Forbidden
