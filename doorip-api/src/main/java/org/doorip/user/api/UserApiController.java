@@ -5,6 +5,7 @@ import org.doorip.auth.UserId;
 import org.doorip.common.ApiResponse;
 import org.doorip.common.ApiResponseUtil;
 import org.doorip.message.SuccessMessage;
+import org.doorip.user.dto.request.UserReissueRequest;
 import org.doorip.user.dto.request.UserSignInRequest;
 import org.doorip.user.dto.request.UserSignUpRequest;
 import org.doorip.user.dto.response.UserResponse;
@@ -43,5 +44,12 @@ public class UserApiController {
     public ResponseEntity<ApiResponse<?>> withdraw(@UserId final Long userId) {
         userService.withdraw(userId);
         return ApiResponseUtil.success(SuccessMessage.OK);
+    }
+
+    @PatchMapping("/reissue")
+    public ResponseEntity<ApiResponse<?>> reissue(@RequestHeader("Authorization") final String refreshtoken,
+                                                  @RequestBody final UserReissueRequest request) {
+        UserResponse response = userService.reissue(refreshtoken, request);
+        return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 }
