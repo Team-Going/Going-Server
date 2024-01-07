@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import static org.doorip.common.Constants.AUTHORIZATION;
+
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
 @Controller
@@ -21,14 +23,14 @@ public class UserApiController {
     private final UserService userService;
 
     @PostMapping("/signin")
-    public ResponseEntity<ApiResponse<?>> signIn(@RequestHeader("Authorization") final String token,
+    public ResponseEntity<ApiResponse<?>> signIn(@RequestHeader(AUTHORIZATION) final String token,
                                                  @RequestBody final UserSignInRequest request) {
         final UserResponse response = userService.signIn(token, request);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<ApiResponse<?>> signUp(@RequestHeader("Authorization") final String token,
+    public ResponseEntity<ApiResponse<?>> signUp(@RequestHeader(AUTHORIZATION) final String token,
                                                  @RequestBody final UserSignUpRequest request) {
         final UserResponse response = userService.signUp(token, request);
         return ApiResponseUtil.success(SuccessMessage.CREATED, response);
