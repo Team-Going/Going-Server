@@ -5,6 +5,7 @@ import org.doorip.common.ApiResponse;
 import org.doorip.common.ApiResponseUtil;
 import org.doorip.message.SuccessMessage;
 import org.doorip.user.dto.request.UserSignInRequest;
+import org.doorip.user.dto.request.UserSignUpRequest;
 import org.doorip.user.dto.response.UserResponse;
 import org.doorip.user.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -22,5 +23,12 @@ public class UserApiController {
                                                  @RequestParam final UserSignInRequest request) {
         final UserResponse response = userService.signIn(token, request);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
+    }
+    
+    @PostMapping("/signup")
+    public ResponseEntity<ApiResponse<?>> signUp(@RequestHeader("Authorization") final String token,
+                                                 @RequestParam final UserSignUpRequest request) {
+        final UserResponse response = userService.signUp(token, request);
+        return ApiResponseUtil.success(SuccessMessage.CREATED, response);
     }
 }
