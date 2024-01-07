@@ -38,4 +38,10 @@ public class UserApiController {
         userService.signOut(userId);
         return ApiResponseUtil.success(SuccessMessage.OK);
     }
+
+    @DeleteMapping("/withdraw")
+    public ResponseEntity<ApiResponse<?>> withdraw(@UserId final Long userId) {
+        userService.withdraw(userId);
+        return ApiResponseUtil.success(SuccessMessage.OK);
+    }
 }

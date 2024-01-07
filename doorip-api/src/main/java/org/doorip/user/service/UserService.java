@@ -57,6 +57,10 @@ public class UserService {
         deleteRefreshToken(findUser);
     }
 
+    public void withdraw(Long userId) {
+        userRepository.deleteById(userId);
+    }
+
     private String getPlatformId(String token, Platform platform) {
         if (platform == APPLE) {
             return appleOAuthProvider.getApplePlatformId(token);
@@ -88,5 +92,4 @@ public class UserService {
         user.updateRefreshToken(null);
         refreshTokenRepository.deleteById(user.getId());
     }
-
 }
