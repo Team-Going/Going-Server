@@ -24,7 +24,7 @@ public class UserApiController {
         final UserResponse response = userService.signIn(token, request);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
-    
+
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<?>> signUp(@RequestHeader("Authorization") final String token,
                                                  @RequestParam final UserSignUpRequest request) {
