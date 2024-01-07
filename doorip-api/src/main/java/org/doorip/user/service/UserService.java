@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.doorip.auth.jwt.JwtProvider;
 import org.doorip.auth.jwt.Token;
 import org.doorip.exception.EntityNotFoundException;
-import org.doorip.exception.UnauthorizedException;
 import org.doorip.message.ErrorMessage;
 import org.doorip.openfeign.apple.AppleOAuthProvider;
 import org.doorip.openfeign.kakao.KakaoOAuthProvider;
@@ -25,7 +24,7 @@ import static org.doorip.user.domain.User.createUser;
 
 @RequiredArgsConstructor
 @Service
-@Transactional(readOnly = true)
+@Transactional
 public class UserService {
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -33,7 +32,6 @@ public class UserService {
     private final AppleOAuthProvider appleOAuthProvider;
     private final KakaoOAuthProvider kakaoOAuthProvider;
 
-    @Transactional
     public UserResponse signIn(String token, UserSignInRequest request) {
         Platform enumPlatform = getEnumPlatformFromStringPlatform(request.platform());
         String platformId = getPlatformId(token, enumPlatform);
@@ -44,7 +42,6 @@ public class UserService {
         return UserResponse.of(issueToken);
     }
 
-    @Transactional(noRollbackFor = UnauthorizedException.class)
     public UserResponse signUp(String token, UserSignUpRequest request) {
         Platform enumPlatform = getEnumPlatformFromStringPlatform(request.platform());
         String platformId = getPlatformId(token, enumPlatform);
