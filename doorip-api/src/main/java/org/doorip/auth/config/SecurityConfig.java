@@ -23,8 +23,8 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtValidator jwtValidator;
     private final JwtProvider jwtProvider;
-
-    private static final String[] whiteList = {"/api/users/signin", "/api/users/signup", "/api/users/reissue", "/"};
+    private static final String[] whiteList = {"/api/users/signin", "/api/users/signup", "/api/users/reissue",
+            "/", "/swagger-ui/**", "/error", "/v3/api-docs/**"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
