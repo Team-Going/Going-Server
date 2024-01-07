@@ -20,8 +20,7 @@ jobs:
 
       - name: ✔️ create application.yml
         run: |
-          cd ./doorip-api/src/main
-          mkdir resources && cd $_
+          cd ./doorip-api/src/main/resources
           touch ./application.yml
           echo "$APPLICATION_DEV" > ./application.yml
         env:
