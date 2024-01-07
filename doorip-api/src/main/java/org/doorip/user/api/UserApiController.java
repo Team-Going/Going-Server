@@ -20,14 +20,14 @@ public class UserApiController {
 
     @PostMapping("/signin")
     public ResponseEntity<ApiResponse<?>> signIn(@RequestHeader("Authorization") final String token,
-                                                 @RequestParam final UserSignInRequest request) {
+                                                 @RequestBody final UserSignInRequest request) {
         final UserResponse response = userService.signIn(token, request);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<?>> signUp(@RequestHeader("Authorization") final String token,
-                                                 @RequestParam final UserSignUpRequest request) {
+                                                 @RequestBody final UserSignUpRequest request) {
         final UserResponse response = userService.signUp(token, request);
         return ApiResponseUtil.success(SuccessMessage.CREATED, response);
     }
