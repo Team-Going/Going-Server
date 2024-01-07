@@ -1,6 +1,7 @@
 package org.doorip.user.api;
 
 import lombok.RequiredArgsConstructor;
+import org.doorip.auth.UserId;
 import org.doorip.common.ApiResponse;
 import org.doorip.common.ApiResponseUtil;
 import org.doorip.message.SuccessMessage;
@@ -30,5 +31,11 @@ public class UserApiController {
                                                  @RequestBody final UserSignUpRequest request) {
         final UserResponse response = userService.signUp(token, request);
         return ApiResponseUtil.success(SuccessMessage.CREATED, response);
+    }
+
+    @PatchMapping("/signout")
+    public ResponseEntity<ApiResponse<?>> signOut(@UserId final Long userId) {
+        userService.signOut(userId);
+        return ApiResponseUtil.success(SuccessMessage.OK);
     }
 }
