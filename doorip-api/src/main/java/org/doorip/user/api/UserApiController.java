@@ -46,8 +46,8 @@ public class UserApiController {
         return ApiResponseUtil.success(SuccessMessage.OK);
     }
 
-    @PatchMapping("/reissue")
-    public ResponseEntity<ApiResponse<?>> reissue(@RequestHeader("Authorization") final String refreshtoken,
+    @PostMapping("/reissue")
+    public ResponseEntity<ApiResponse<?>> reissue(@RequestHeader(AUTHORIZATION) final String refreshtoken,
                                                   @RequestBody final UserReissueRequest request) {
         UserResponse response = userService.reissue(refreshtoken, request);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
