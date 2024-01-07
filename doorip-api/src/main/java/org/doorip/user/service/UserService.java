@@ -52,6 +52,11 @@ public class UserService {
         return UserResponse.of(issueToken);
     }
 
+    public void signOut(Long userId) {
+        User findUser = getUser(userId);
+        deleteRefreshToken(findUser);
+    }
+
     private String getPlatformId(String token, Platform platform) {
         if (platform == APPLE) {
             return appleOAuthProvider.getApplePlatformId(token);
@@ -73,4 +78,15 @@ public class UserService {
         User user = createUser(request.name(), request.intro(), platformId, enumPlatform);
         return userRepository.save(user);
     }
+
+    private User getUser(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND));
+    }
+
+    private void deleteRefreshToken(User user) {
+        user.updateRefreshToken(null);
+        refreshTokenRepository.deleteById(user.getId());
+    }
+
 }
