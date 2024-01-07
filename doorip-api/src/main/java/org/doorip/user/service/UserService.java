@@ -30,6 +30,7 @@ public class UserService {
     private final AppleOAuthProvider appleOAuthProvider;
     private final KakaoOAuthProvider kakaoOAuthProvider;
 
+    @Transactional
     public UserResponse signIn(String token, UserSignInRequest request) {
         Platform enumPlatform = getEnumPlatformFromStringPlatform(request.platform());
         String platformId = getPlatformId(token, enumPlatform);

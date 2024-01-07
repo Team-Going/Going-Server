@@ -8,11 +8,12 @@ import org.doorip.user.dto.request.UserSignInRequest;
 import org.doorip.user.dto.response.UserResponse;
 import org.doorip.user.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
-@RestController
+@Controller
 public class UserApiController {
     private final UserService userService;
 
