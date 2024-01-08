@@ -50,4 +50,12 @@ public class Trip extends BaseTimeEntity {
     public void removeParticipant(Participant participant) {
         participants.remove(participant);
     }
+
+    public void addTodo(Todo todo) {
+        todos.add(todo);
+    }
+
+    public void removeTodo(Todo todo) {
+        todos.remove(todo);
+    }
 }

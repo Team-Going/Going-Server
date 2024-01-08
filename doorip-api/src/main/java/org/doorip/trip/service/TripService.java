@@ -10,6 +10,8 @@ import org.doorip.trip.domain.Trip;
 import org.doorip.trip.dto.request.TripCreateRequest;
 import org.doorip.trip.dto.response.TripCreateResponse;
 import org.doorip.trip.repository.ParticipantRepository;
+import org.doorip.common.Constants;
+import org.doorip.trip.dto.response.TripGetResponse;
 import org.doorip.trip.repository.TripRepository;
 import org.doorip.user.domain.User;
 import org.doorip.user.repository.UserRepository;
@@ -21,6 +23,7 @@ import java.util.UUID;
 
 import static org.doorip.trip.domain.Participant.createParticipant;
 import static org.doorip.trip.domain.Trip.createTrip;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -39,6 +42,21 @@ public class TripService {
         saveParticipant(request.styleA(), request.styleB(), request.styleC(), request.styleD(), request.styleE(), findUser, createdTrip);
 
         return TripCreateResponse.of(createdTrip);
+    }
+
+    public TripGetResponse getTrips(Long userId, String progress) {
+        User findUser = getUser(userId);
+        List<Trip> trips = getTripsAccordingToProgress(userId, progress);
+        return TripGetResponse.of(findUser.getName(), trips);
+    }
+
+    private List<Trip> getTripsAccordingToProgress(Long userId, String progress) {
+        if (progress.equals(Constants.INCOMPLETE)) {
+            return tripRepository.findInCompleteTripsByUserId(userId, LocalDate.now());
+        } else if (progress.equals(Constants.COMPLETE)) {
+            return tripRepository.findCompleteTripsByUserId(userId, LocalDate.now());
+        }
+        throw new InvalidValueException(ErrorMessage.INVALID_REQUEST_PARAMETER_VALUE);
     }
 
     private User getUser(Long userId) {
@@ -75,7 +93,7 @@ public class TripService {
     }
 
     private void saveParticipant(int styleA, int styleB, int styleC, int styleD, int styleE,
-                                        User user, Trip trip) {
+                                 User user, Trip trip) {
         Participant participant = createParticipant(Role.HOST, styleA, styleB, styleC, styleD, styleE, user, trip);
         participantRepository.save(participant);
     }

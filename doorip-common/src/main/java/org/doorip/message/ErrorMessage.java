@@ -13,7 +13,9 @@ public enum ErrorMessage {
      */
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "e4000", "잘못된 요청입니다."),
     INVALID_PLATFORM_TYPE(HttpStatus.BAD_REQUEST, "e4001", "유효하지 않은 플랫폼 타입입니다."),
-    INVALID_DATE_TYPE(HttpStatus.BAD_REQUEST, "e4002", "유효하지 않은 날짜 타입입니다."),
+    INVALID_REQUEST_PARAMETER_VALUE(HttpStatus.BAD_REQUEST, "e4002", "유효하지 않은 요청 파라미터 값입니다."),
+    INVALID_ALLOCATOR_COUNT(HttpStatus.BAD_REQUEST, "e4003", "여행 TODO를 생성하기 위해 최소 1명 이상의 배정자가 필요합니다."),
+    INVALID_DATE_TYPE(HttpStatus.BAD_REQUEST, "e4004", "유효하지 않은 날짜 타입입니다."),
 
     /**
      * 401 Unauthorized
@@ -44,6 +46,8 @@ public enum ErrorMessage {
     ENTITY_NOT_FOUND(HttpStatus.NOT_FOUND, "e4040", "대상을 찾을 수 없습니다."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "e4041", "존재하지 않는 회원입니다."),
     REFRESH_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "e4042", "리프레쉬 토큰을 찾을 수 없습니다."),
+    TRIP_NOT_FOUND(HttpStatus.NOT_FOUND, "e4043", "존재하지 않는 여행입니다."),
+    PARTICIPANT_NOT_FOUND(HttpStatus.NOT_FOUND, "e4044", "존재하지 않는 참여자입니다."),
 
     /**
      * 405 Method Not Allowed

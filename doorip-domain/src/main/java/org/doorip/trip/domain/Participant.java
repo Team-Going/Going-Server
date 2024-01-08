@@ -6,6 +6,9 @@ import org.doorip.common.BaseTimeEntity;
 import org.doorip.todo.domain.Allocator;
 import org.doorip.user.domain.User;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
@@ -35,11 +38,11 @@ public class Participant extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trip_id")
     private Trip trip;
-    @OneToOne(mappedBy = "participant", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private Allocator allocator;
+    @Builder.Default
+    @OneToMany(mappedBy = "participant", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Allocator> allocators = new ArrayList<>();
 
-    public static Participant createParticipant(Role role, int styleA, int styleB, int styleC,
-                                                int styleD, int styleE, User user, Trip trip){
+    public static Participant createParticipant(Role role, int styleA, int styleB, int styleC, int styleD, int styleE, User user, Trip trip){
         Participant participant = Participant.builder()
                 .role(role)
                 .styleA(styleA)
@@ -61,5 +64,13 @@ public class Participant extends BaseTimeEntity {
         }
         this.trip = trip;
         trip.addParticipant(this);
+    }
+
+    public void addAllocator(Allocator allocator) {
+        allocators.add(allocator);
+    }
+
+    public void removeAllocator(Allocator allocator) {
+        allocators.remove(allocator);
     }
 }
