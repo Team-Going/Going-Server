@@ -33,4 +33,21 @@ public class Trip extends BaseTimeEntity {
     @Builder.Default
     @OneToMany(mappedBy = "trip", cascade = CascadeType.REMOVE)
     private List<Todo> todos = new ArrayList<>();
+
+    public static Trip createTrip(String title, LocalDate startDate, LocalDate endDate, String code) {
+        return Trip.builder()
+                .title(title)
+                .startDate(startDate)
+                .endDate(endDate)
+                .code(code)
+                .build();
+    }
+
+    public void addParticipant(Participant participant) {
+        participants.add(participant);
+    }
+
+    public void removeParticipant(Participant participant) {
+        participants.remove(participant);
+    }
 }
