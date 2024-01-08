@@ -33,6 +33,34 @@ public class Todo extends BaseTimeEntity {
     @JoinColumn(name = "trip_id")
     private Trip trip;
     @Builder.Default
-    @OneToMany(mappedBy = "todo", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "todo", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private List<Allocator> allocators = new ArrayList<>();
+
+    public static Todo createTodo(String title, LocalDate endDate, String memo, Secret secret, Trip trip) {
+        Todo todo = Todo.builder()
+                .title(title)
+                .endDate(endDate)
+                .memo(memo)
+                .secret(secret)
+                .progress(Progress.INCOMPLETE)
+                .build();
+        todo.changeTrip(trip);
+        return todo;
+    }
+
+    private void changeTrip(Trip trip) {
+        if (this.trip != null) {
+            this.trip.removeTodo(this);
+        }
+        this.trip = trip;
+        trip.addTodo(this);
+    }
+
+    public void addAllocator(Allocator allocator) {
+        allocators.add(allocator);
+    }
+
+    public void removeAllocator(Allocator allocator) {
+        allocators.remove(allocator);
+    }
 }
