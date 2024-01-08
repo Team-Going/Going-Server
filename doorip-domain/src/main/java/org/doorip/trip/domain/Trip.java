@@ -28,7 +28,7 @@ public class Trip extends BaseTimeEntity {
     @Column(nullable = false)
     private String code;
     @Builder.Default
-    @OneToMany(mappedBy = "trip", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "trip", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private List<Participant> participants = new ArrayList<>();
     @Builder.Default
     @OneToMany(mappedBy = "trip", cascade = CascadeType.REMOVE)

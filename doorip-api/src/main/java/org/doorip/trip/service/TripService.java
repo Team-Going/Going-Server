@@ -36,18 +36,44 @@ public class TripService {
     @Transactional
     public TripCreateResponse createTripAndParticipant(Long userId, TripCreateRequest request) {
         User findUser = getUser(userId);
-        validateDate(request);
-        String code = createCode(6);
-        Trip createdTrip = saveTrip(request, code);
-        saveParticipant(request.styleA(), request.styleB(), request.styleC(), request.styleD(), request.styleE(), findUser, createdTrip);
+        validateDate(request.startDate(), request.endDate());
+        String code = createCode();
+        Trip trip = createTrip(request, code);
+        createParticipant(request, findUser, trip);
+        tripRepository.save(trip);
 
-        return TripCreateResponse.of(createdTrip);
+        return TripCreateResponse.of(trip);
     }
 
     public TripGetResponse getTrips(Long userId, String progress) {
         User findUser = getUser(userId);
         List<Trip> trips = getTripsAccordingToProgress(userId, progress);
         return TripGetResponse.of(findUser.getName(), trips);
+    }
+
+    private void validateDate(LocalDate startDate, LocalDate endDate) {
+        if (endDate.isBefore(LocalDate.now()) || endDate.isBefore(startDate)) {
+            throw new InvalidValueException(ErrorMessage.INVALID_DATE_TYPE);
+        }
+    }
+
+    private String createCode() {
+        String code;
+        do {
+            String uuid = UUID.randomUUID().toString();
+            code = uuid.substring(0, 6);
+        } while (isDuplicateCode(code));
+
+        return code;
+    }
+
+    private Trip createTrip(TripCreateRequest request, String code) {
+        return Trip.createTrip(request.title(), request.startDate(), request.endDate(), code);
+    }
+
+    private void createParticipant(TripCreateRequest request, User user, Trip trip) {
+        Participant.createParticipant(Role.HOST, request.styleA(), request.styleB(),
+                request.styleC(), request.styleD(), request.styleE(), user, trip);
     }
 
     private List<Trip> getTripsAccordingToProgress(Long userId, String progress) {
@@ -64,37 +90,7 @@ public class TripService {
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND));
     }
 
-    private void validateDate(TripCreateRequest request) {
-        if (request.endDate().isBefore(LocalDate.now()) || request.endDate().isBefore(request.startDate())) {
-            throw new InvalidValueException(ErrorMessage.INVALID_DATE_TYPE);
-        }
-    }
-
-    private String createCode(int num) {
-        String code;
-
-        do {
-            String uuid = UUID.randomUUID().toString();
-            System.out.println(uuid);
-            code = uuid.substring(0, num);
-
-        } while (validateDuplicateCode(code));
-
-        return code;
-    }
-
-    private boolean validateDuplicateCode(String code) {
+    private boolean isDuplicateCode(String code) {
         return tripRepository.existsByCode(code);
-    }
-
-    private Trip saveTrip(TripCreateRequest request, String code) {
-        Trip trip = createTrip(request.title(), request.startDate(), request.endDate(), code);
-        return tripRepository.save(trip);
-    }
-
-    private void saveParticipant(int styleA, int styleB, int styleC, int styleD, int styleE,
-                                 User user, Trip trip) {
-        Participant participant = createParticipant(Role.HOST, styleA, styleB, styleC, styleD, styleE, user, trip);
-        participantRepository.save(participant);
     }
 }
