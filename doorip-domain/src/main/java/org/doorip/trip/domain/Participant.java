@@ -42,6 +42,30 @@ public class Participant extends BaseTimeEntity {
     @OneToMany(mappedBy = "participant", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Allocator> allocators = new ArrayList<>();
 
+    public static Participant createParticipant(Role role, int styleA, int styleB, int styleC, int styleD, int styleE, User user, Trip trip){
+        Participant participant = Participant.builder()
+                .role(role)
+                .styleA(styleA)
+                .styleB(styleB)
+                .styleC(styleC)
+                .styleD(styleD)
+                .styleE(styleE)
+                .user(user)
+                .trip(trip)
+                .build();
+        participant.changeTrip(trip);
+
+        return participant;
+    }
+
+    public void changeTrip(Trip trip) {
+        if (this.trip != null) {
+            this.trip.removeParticipant(this);
+        }
+        this.trip = trip;
+        trip.addParticipant(this);
+    }
+
     public void addAllocator(Allocator allocator) {
         allocators.add(allocator);
     }

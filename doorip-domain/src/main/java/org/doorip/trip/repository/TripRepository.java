@@ -30,4 +30,6 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
             "and datediff(t.endDate, :now) < 0 " +
             "order by datediff(:now, t.endDate)")
     List<Trip> findCompleteTripsByUserId(@Param("userId") Long userId, @Param("now") LocalDate now);
+
+    boolean existsByCode(String code);
 }
