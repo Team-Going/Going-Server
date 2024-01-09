@@ -16,6 +16,7 @@ import org.doorip.user.domain.User;
 import org.doorip.user.dto.request.UserReissueRequest;
 import org.doorip.user.dto.request.UserSignInRequest;
 import org.doorip.user.dto.request.UserSignUpRequest;
+import org.doorip.user.dto.response.ProfileGetResponse;
 import org.doorip.user.dto.response.UserResponse;
 import org.doorip.user.repository.RefreshTokenRepository;
 import org.doorip.user.repository.UserRepository;
@@ -76,6 +77,11 @@ public class UserService {
         updateRefreshToken(issueToken.refreshToken(), findUser);
 
         return UserResponse.of(issueToken);
+    }
+
+    public ProfileGetResponse getProfile(Long userId) {
+        User findUser = getUser(userId);
+        return ProfileGetResponse.of(findUser);
     }
 
     private String getPlatformId(String token, Platform platform) {

@@ -8,6 +8,7 @@ import org.doorip.message.SuccessMessage;
 import org.doorip.user.dto.request.UserReissueRequest;
 import org.doorip.user.dto.request.UserSignInRequest;
 import org.doorip.user.dto.request.UserSignUpRequest;
+import org.doorip.user.dto.response.ProfileGetResponse;
 import org.doorip.user.dto.response.UserResponse;
 import org.doorip.user.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +53,12 @@ public class UserApiController {
     public ResponseEntity<ApiResponse<?>> reissue(@RequestHeader(AUTHORIZATION) final String refreshtoken,
                                                   @RequestBody final UserReissueRequest request) {
         UserResponse response = userService.reissue(refreshtoken, request);
+        return ApiResponseUtil.success(SuccessMessage.OK, response);
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<ApiResponse<?>> getProfile(@UserId final Long userId) {
+        final ProfileGetResponse response = userService.getProfile(userId);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 }
