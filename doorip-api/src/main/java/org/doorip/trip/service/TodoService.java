@@ -27,9 +27,9 @@ public class TodoService {
     private final ParticipantRepository participantRepository;
     private final TodoRepository todoRepository;
 
-    public void createTripTodo(TodoCreateRequest request) {
+    public void createTripTodo(Long tripId, TodoCreateRequest request) {
         validateAllocators(request.allocators());
-        Trip findTrip = getTrip(request.tripId());
+        Trip findTrip = getTrip(tripId);
         Todo todo = createTodo(request, findTrip);
         createAllocators(request.allocators(), todo);
         todoRepository.save(todo);
