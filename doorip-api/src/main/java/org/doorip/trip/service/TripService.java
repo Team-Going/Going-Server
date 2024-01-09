@@ -1,6 +1,7 @@
 package org.doorip.trip.service;
 
 import lombok.RequiredArgsConstructor;
+import org.doorip.common.Constants;
 import org.doorip.exception.EntityNotFoundException;
 import org.doorip.exception.InvalidValueException;
 import org.doorip.message.ErrorMessage;
@@ -10,9 +11,8 @@ import org.doorip.trip.domain.Trip;
 import org.doorip.trip.dto.request.TripCreateRequest;
 import org.doorip.trip.dto.request.TripVerifyRequest;
 import org.doorip.trip.dto.response.TripCreateResponse;
-import org.doorip.trip.dto.response.TripResponse;
-import org.doorip.common.Constants;
 import org.doorip.trip.dto.response.TripGetResponse;
+import org.doorip.trip.dto.response.TripResponse;
 import org.doorip.trip.repository.TripRepository;
 import org.doorip.user.domain.User;
 import org.doorip.user.repository.UserRepository;
