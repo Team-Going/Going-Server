@@ -48,6 +48,7 @@ public enum ErrorMessage {
     REFRESH_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "e4042", "리프레쉬 토큰을 찾을 수 없습니다."),
     TRIP_NOT_FOUND(HttpStatus.NOT_FOUND, "e4043", "존재하지 않는 여행입니다."),
     PARTICIPANT_NOT_FOUND(HttpStatus.NOT_FOUND, "e4044", "존재하지 않는 참여자입니다."),
+    RESULT_NOT_FOUND(HttpStatus.NOT_FOUND, "e4040", "유저의 성향 결과 값을 찾을 수 없습니다."),
 
     /**
      * 405 Method Not Allowed
