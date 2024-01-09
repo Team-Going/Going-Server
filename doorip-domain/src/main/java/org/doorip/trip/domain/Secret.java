@@ -9,4 +9,8 @@ public enum Secret {
         }
         return MY;
     }
+
+    public static boolean of(Secret secret) {
+        return !secret.equals(OUR);
+    }
 }
