@@ -44,6 +44,7 @@ public class UserService {
         User findUser = getUser(enumPlatform, platformId);
         Token issueToken = jwtProvider.issueToken(findUser.getId());
         updateRefreshToken(issueToken.refreshToken(), findUser);
+        validateResult(findUser);
 
         return UserResponse.of(issueToken);
     }
@@ -105,6 +106,12 @@ public class UserService {
     private void updateRefreshToken(String refreshToken, User user) {
         user.updateRefreshToken(refreshToken);
         refreshTokenRepository.save(RefreshToken.createRefreshToken(user.getId(), refreshToken));
+    }
+
+    private void validateResult(User user) {
+        if (user.getResult() == null) {
+            throw new EntityNotFoundException(ErrorMessage.RESULT_NOT_FOUND);
+        }
     }
 
     private User saveUser(UserSignUpRequest request, String platformId, Platform enumPlatform) {
