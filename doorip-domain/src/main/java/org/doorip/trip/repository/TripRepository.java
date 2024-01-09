@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface TripRepository extends JpaRepository<Trip, Long> {
     @Query("select t " +
@@ -30,6 +31,8 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
             "and datediff(t.endDate, :now) < 0 " +
             "order by datediff(:now, t.endDate)")
     List<Trip> findCompleteTripsByUserId(@Param("userId") Long userId, @Param("now") LocalDate now);
+
+    Optional<Trip> findByCode(String code);
 
     boolean existsByCode(String code);
 }
