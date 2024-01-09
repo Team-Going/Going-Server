@@ -8,8 +8,9 @@ import org.doorip.trip.domain.Participant;
 import org.doorip.trip.domain.Role;
 import org.doorip.trip.domain.Trip;
 import org.doorip.trip.dto.request.TripCreateRequest;
+import org.doorip.trip.dto.request.TripVerifyRequest;
 import org.doorip.trip.dto.response.TripCreateResponse;
-import org.doorip.trip.repository.ParticipantRepository;
+import org.doorip.trip.dto.response.TripResponse;
 import org.doorip.common.Constants;
 import org.doorip.trip.dto.response.TripGetResponse;
 import org.doorip.trip.repository.TripRepository;
@@ -21,8 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import static org.doorip.trip.domain.Participant.createParticipant;
-import static org.doorip.trip.domain.Trip.createTrip;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -30,7 +29,6 @@ import java.util.List;
 @Service
 public class TripService {
     private final TripRepository tripRepository;
-    private final ParticipantRepository participantRepository;
     private final UserRepository userRepository;
 
     @Transactional
@@ -49,6 +47,11 @@ public class TripService {
         User findUser = getUser(userId);
         List<Trip> trips = getTripsAccordingToProgress(userId, progress);
         return TripGetResponse.of(findUser.getName(), trips);
+    }
+
+    public TripResponse verifyCode(TripVerifyRequest request) {
+        Trip trip = getTrip(request.code());
+        return TripResponse.of(trip);
     }
 
     private void validateDate(LocalDate startDate, LocalDate endDate) {
@@ -88,6 +91,11 @@ public class TripService {
     private User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND));
+    }
+
+    private Trip getTrip(String code) {
+        return tripRepository.findByCode(code)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.TRIP_NOT_FOUND));
     }
 
     private boolean isDuplicateCode(String code) {
