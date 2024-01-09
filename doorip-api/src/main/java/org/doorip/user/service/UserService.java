@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.doorip.auth.jwt.JwtProvider;
 import org.doorip.auth.jwt.JwtValidator;
 import org.doorip.auth.jwt.Token;
+import org.doorip.exception.ConflictException;
 import org.doorip.exception.EntityNotFoundException;
 import org.doorip.exception.UnauthorizedException;
 import org.doorip.message.ErrorMessage;
@@ -49,6 +50,7 @@ public class UserService {
     public UserResponse signUp(String token, UserSignUpRequest request) {
         Platform enumPlatform = getEnumPlatformFromStringPlatform(request.platform());
         String platformId = getPlatformId(token, enumPlatform);
+        validateDuplicateUser(enumPlatform, platformId);
         User savedUser = saveUser(request, platformId, enumPlatform);
         Token issueToken = jwtProvider.issueToken(savedUser.getId());
         updateRefreshToken(issueToken.refreshToken(), savedUser);
@@ -81,6 +83,12 @@ public class UserService {
             return appleOAuthProvider.getApplePlatformId(token);
         }
         return kakaoOAuthProvider.getKakaoPlatformId(token);
+    }
+
+    private void validateDuplicateUser(Platform platform, String platformId) {
+        if (userRepository.existsUserByPlatformAndPlatformId(platform, platformId)) {
+            throw new ConflictException(ErrorMessage.DUPLICATE_USER);
+        }
     }
 
     private User getUser(Platform platform, String platformId) {
