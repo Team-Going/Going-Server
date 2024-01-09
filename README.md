@@ -50,7 +50,7 @@
 
 <div align=center>
   
-<img width="750" src="https://github.com/Team-Going/Going-Server/assets/81796317/8c26c30f-a690-4261-8424-5322a6b4b6ea">
+<img width="750" src="https://github.com/Team-Going/Going-Server/assets/81796317/b2591bdd-0188-4363-8609-82cc0bd37042">
 
 </div>
 
