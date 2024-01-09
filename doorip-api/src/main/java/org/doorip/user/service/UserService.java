@@ -81,7 +81,6 @@ public class UserService {
 
     public ProfileGetResponse getProfile(Long userId) {
         User findUser = getUser(userId);
-        validateResult(findUser);
         return ProfileGetResponse.of(findUser);
     }
 
@@ -147,11 +146,5 @@ public class UserService {
         RefreshToken storedRefreshToken = refreshTokenRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.REFRESH_TOKEN_NOT_FOUND));
         return storedRefreshToken.getRefreshToken();
-    }
-
-    private void validateResult(User user) {
-        if (user.getResult() == null) {
-            throw new EntityNotFoundException(ErrorMessage.RESULT_NOT_FOUND);
-        }
     }
 }

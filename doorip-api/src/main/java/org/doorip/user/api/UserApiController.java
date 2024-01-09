@@ -58,7 +58,7 @@ public class UserApiController {
 
     @GetMapping("/profile")
     public ResponseEntity<ApiResponse<?>> getProfile(@UserId final Long userId) {
-        ProfileGetResponse response = userService.getProfile(userId);
+        final ProfileGetResponse response = userService.getProfile(userId);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 }
