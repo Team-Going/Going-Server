@@ -16,6 +16,7 @@ import org.doorip.user.domain.User;
 import org.doorip.user.dto.request.UserReissueRequest;
 import org.doorip.user.dto.request.UserSignInRequest;
 import org.doorip.user.dto.request.UserSignUpRequest;
+import org.doorip.user.dto.response.ProfileGetResponse;
 import org.doorip.user.dto.response.UserResponse;
 import org.doorip.user.repository.RefreshTokenRepository;
 import org.doorip.user.repository.UserRepository;
@@ -41,6 +42,7 @@ public class UserService {
         Platform enumPlatform = getEnumPlatformFromStringPlatform(request.platform());
         String platformId = getPlatformId(token, enumPlatform);
         User findUser = getUser(enumPlatform, platformId);
+        validateResult(findUser);
         Token issueToken = jwtProvider.issueToken(findUser.getId());
         updateRefreshToken(issueToken.refreshToken(), findUser);
 
@@ -78,6 +80,11 @@ public class UserService {
         return UserResponse.of(issueToken);
     }
 
+    public ProfileGetResponse getProfile(Long userId) {
+        User findUser = getUser(userId);
+        return ProfileGetResponse.of(findUser);
+    }
+
     private String getPlatformId(String token, Platform platform) {
         if (platform == APPLE) {
             return appleOAuthProvider.getApplePlatformId(token);
@@ -99,6 +106,12 @@ public class UserService {
     private void updateRefreshToken(String refreshToken, User user) {
         user.updateRefreshToken(refreshToken);
         refreshTokenRepository.save(RefreshToken.createRefreshToken(user.getId(), refreshToken));
+    }
+
+    private void validateResult(User user) {
+        if (user.getResult() == null) {
+            throw new EntityNotFoundException(ErrorMessage.RESULT_NOT_FOUND);
+        }
     }
 
     private User saveUser(UserSignUpRequest request, String platformId, Platform enumPlatform) {

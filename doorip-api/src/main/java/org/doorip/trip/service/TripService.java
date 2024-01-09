@@ -1,7 +1,6 @@
 package org.doorip.trip.service;
 
 import lombok.RequiredArgsConstructor;
-import org.doorip.common.Constants;
 import org.doorip.exception.EntityNotFoundException;
 import org.doorip.exception.InvalidValueException;
 import org.doorip.message.ErrorMessage;
@@ -9,7 +8,10 @@ import org.doorip.trip.domain.Participant;
 import org.doorip.trip.domain.Role;
 import org.doorip.trip.domain.Trip;
 import org.doorip.trip.dto.request.TripCreateRequest;
+import org.doorip.trip.dto.request.TripVerifyRequest;
 import org.doorip.trip.dto.response.TripCreateResponse;
+import org.doorip.trip.dto.response.TripResponse;
+import org.doorip.common.Constants;
 import org.doorip.trip.dto.response.TripGetResponse;
 import org.doorip.trip.repository.TripRepository;
 import org.doorip.user.domain.User;
@@ -43,6 +45,11 @@ public class TripService {
         User findUser = getUser(userId);
         List<Trip> trips = getTripsAccordingToProgress(userId, progress);
         return TripGetResponse.of(findUser.getName(), trips);
+    }
+
+    public TripResponse verifyCode(TripVerifyRequest request) {
+        Trip trip = getTrip(request.code());
+        return TripResponse.of(trip);
     }
 
     private void validateDate(LocalDate startDate, LocalDate endDate) {
@@ -82,6 +89,11 @@ public class TripService {
     private User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND));
+    }
+
+    private Trip getTrip(String code) {
+        return tripRepository.findByCode(code)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.TRIP_NOT_FOUND));
     }
 
     private boolean isDuplicateCode(String code) {
