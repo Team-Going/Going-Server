@@ -1,9 +1,8 @@
-package org.doorip.todo.domain;
+package org.doorip.trip.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.doorip.common.BaseTimeEntity;
-import org.doorip.trip.domain.Participant;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)

@@ -3,7 +3,6 @@ package org.doorip.trip.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import org.doorip.common.BaseTimeEntity;
-import org.doorip.todo.domain.Allocator;
 import org.doorip.user.domain.User;
 
 import java.util.ArrayList;
@@ -42,7 +41,7 @@ public class Participant extends BaseTimeEntity {
     @OneToMany(mappedBy = "participant", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Allocator> allocators = new ArrayList<>();
 
-    public static Participant createParticipant(Role role, int styleA, int styleB, int styleC, int styleD, int styleE, User user, Trip trip){
+    public static Participant createParticipant(Role role, int styleA, int styleB, int styleC, int styleD, int styleE, User user, Trip trip) {
         Participant participant = Participant.builder()
                 .role(role)
                 .styleA(styleA)

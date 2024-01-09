@@ -1,9 +1,8 @@
-package org.doorip.todo.domain;
+package org.doorip.trip.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.doorip.common.BaseTimeEntity;
-import org.doorip.trip.domain.Trip;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

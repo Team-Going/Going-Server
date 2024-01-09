@@ -1,11 +1,11 @@
-package org.doorip.todo.api;
+package org.doorip.trip.api;
 
 import lombok.RequiredArgsConstructor;
 import org.doorip.common.ApiResponse;
 import org.doorip.common.ApiResponseUtil;
 import org.doorip.message.SuccessMessage;
-import org.doorip.todo.dto.request.TodoCreateRequest;
-import org.doorip.todo.service.TodoService;
+import org.doorip.trip.dto.request.TodoCreateRequest;
+import org.doorip.trip.service.TodoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
