@@ -16,6 +16,7 @@ import org.doorip.user.domain.User;
 import org.doorip.user.dto.request.UserReissueRequest;
 import org.doorip.user.dto.request.UserSignInRequest;
 import org.doorip.user.dto.request.UserSignUpRequest;
+import org.doorip.user.dto.response.ProfileGetResponse;
 import org.doorip.user.dto.response.UserResponse;
 import org.doorip.user.repository.RefreshTokenRepository;
 import org.doorip.user.repository.UserRepository;
@@ -76,6 +77,12 @@ public class UserService {
         updateRefreshToken(issueToken.refreshToken(), findUser);
 
         return UserResponse.of(issueToken);
+    }
+
+    public ProfileGetResponse getProfile(Long userId) {
+        User findUser = getUser(userId);
+        validateResult(findUser);
+        return ProfileGetResponse.of(findUser);
     }
 
     private String getPlatformId(String token, Platform platform) {
@@ -140,5 +147,11 @@ public class UserService {
         RefreshToken storedRefreshToken = refreshTokenRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.REFRESH_TOKEN_NOT_FOUND));
         return storedRefreshToken.getRefreshToken();
+    }
+
+    private void validateResult(User user) {
+        if (user.getResult() == null) {
+            throw new EntityNotFoundException(ErrorMessage.RESULT_NOT_FOUND);
+        }
     }
 }
