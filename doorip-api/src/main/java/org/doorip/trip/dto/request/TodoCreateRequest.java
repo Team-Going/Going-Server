@@ -1,4 +1,4 @@
-package org.doorip.todo.dto.request;
+package org.doorip.trip.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

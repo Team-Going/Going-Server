@@ -1,23 +1,23 @@
-package org.doorip.todo.service;
+package org.doorip.trip.service;
 
 import lombok.RequiredArgsConstructor;
 import org.doorip.exception.EntityNotFoundException;
 import org.doorip.exception.InvalidValueException;
 import org.doorip.message.ErrorMessage;
-import org.doorip.todo.domain.Secret;
-import org.doorip.todo.domain.Todo;
-import org.doorip.todo.dto.request.TodoCreateRequest;
-import org.doorip.todo.repository.TodoRepository;
 import org.doorip.trip.domain.Participant;
+import org.doorip.trip.domain.Secret;
+import org.doorip.trip.domain.Todo;
 import org.doorip.trip.domain.Trip;
+import org.doorip.trip.dto.request.TodoCreateRequest;
 import org.doorip.trip.repository.ParticipantRepository;
+import org.doorip.trip.repository.TodoRepository;
 import org.doorip.trip.repository.TripRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.doorip.todo.domain.Allocator.createAllocator;
+import static org.doorip.trip.domain.Allocator.createAllocator;
 
 @RequiredArgsConstructor
 @Transactional

@@ -3,7 +3,6 @@ package org.doorip.trip.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import org.doorip.common.BaseTimeEntity;
-import org.doorip.todo.domain.Todo;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
