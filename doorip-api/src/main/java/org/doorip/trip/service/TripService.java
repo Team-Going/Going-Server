@@ -1,6 +1,7 @@
 package org.doorip.trip.service;
 
 import lombok.RequiredArgsConstructor;
+import org.doorip.common.Constants;
 import org.doorip.exception.EntityNotFoundException;
 import org.doorip.exception.InvalidValueException;
 import org.doorip.message.ErrorMessage;
@@ -9,8 +10,6 @@ import org.doorip.trip.domain.Role;
 import org.doorip.trip.domain.Trip;
 import org.doorip.trip.dto.request.TripCreateRequest;
 import org.doorip.trip.dto.response.TripCreateResponse;
-import org.doorip.trip.repository.ParticipantRepository;
-import org.doorip.common.Constants;
 import org.doorip.trip.dto.response.TripGetResponse;
 import org.doorip.trip.repository.TripRepository;
 import org.doorip.user.domain.User;
@@ -19,18 +18,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.UUID;
-
-import static org.doorip.trip.domain.Participant.createParticipant;
-import static org.doorip.trip.domain.Trip.createTrip;
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
 public class TripService {
     private final TripRepository tripRepository;
-    private final ParticipantRepository participantRepository;
     private final UserRepository userRepository;
 
     @Transactional
@@ -41,7 +36,6 @@ public class TripService {
         Trip trip = createTrip(request, code);
         createParticipant(request, findUser, trip);
         tripRepository.save(trip);
-
         return TripCreateResponse.of(trip);
     }
 
