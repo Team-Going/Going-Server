@@ -45,7 +45,6 @@ public class UserService {
         validateResult(findUser);
         Token issueToken = jwtProvider.issueToken(findUser.getId());
         updateRefreshToken(issueToken.refreshToken(), findUser);
-        validateResult(findUser);
 
         return UserResponse.of(issueToken);
     }
