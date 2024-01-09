@@ -42,9 +42,9 @@ public class UserService {
         Platform enumPlatform = getEnumPlatformFromStringPlatform(request.platform());
         String platformId = getPlatformId(token, enumPlatform);
         User findUser = getUser(enumPlatform, platformId);
+        validateResult(findUser);
         Token issueToken = jwtProvider.issueToken(findUser.getId());
         updateRefreshToken(issueToken.refreshToken(), findUser);
-        validateResult(findUser);
 
         return UserResponse.of(issueToken);
     }
