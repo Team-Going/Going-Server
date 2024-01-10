@@ -1,6 +1,7 @@
 package org.doorip.trip.service;
 
 import lombok.RequiredArgsConstructor;
+import org.doorip.exception.ConflictException;
 import org.doorip.exception.EntityNotFoundException;
 import org.doorip.exception.InvalidValueException;
 import org.doorip.message.ErrorMessage;
@@ -8,11 +9,14 @@ import org.doorip.trip.domain.Participant;
 import org.doorip.trip.domain.Role;
 import org.doorip.trip.domain.Trip;
 import org.doorip.trip.dto.request.TripCreateRequest;
+import org.doorip.trip.dto.request.TripEntryRequest;
 import org.doorip.trip.dto.request.TripVerifyRequest;
 import org.doorip.trip.dto.response.TripCreateResponse;
+import org.doorip.trip.dto.response.TripEntryResponse;
 import org.doorip.trip.dto.response.TripResponse;
 import org.doorip.common.Constants;
 import org.doorip.trip.dto.response.TripGetResponse;
+import org.doorip.trip.repository.ParticipantRepository;
 import org.doorip.trip.repository.TripRepository;
 import org.doorip.user.domain.User;
 import org.doorip.user.repository.UserRepository;
@@ -30,6 +34,7 @@ import java.util.List;
 public class TripService {
     private final TripRepository tripRepository;
     private final UserRepository userRepository;
+    private final ParticipantRepository participantRepository;
 
     @Transactional
     public TripCreateResponse createTripAndParticipant(Long userId, TripCreateRequest request) {
@@ -41,6 +46,17 @@ public class TripService {
         tripRepository.save(trip);
 
         return TripCreateResponse.of(trip);
+    }
+
+    @Transactional
+    public TripEntryResponse entryTrip(Long userId, Long tripId, TripEntryRequest request) {
+        User findUser = getUser(userId);
+        Trip findTrip = getTrip(tripId);
+//        여행에 User가 이미 있으면 에러
+        validateParticipant(findUser, findTrip);
+        entryParticipant(request, findUser, findTrip);
+
+        return TripEntryResponse.of(findTrip);
     }
 
     public TripGetResponse getTrips(Long userId, String progress) {
@@ -96,6 +112,23 @@ public class TripService {
     private Trip getTrip(String code) {
         return tripRepository.findByCode(code)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.TRIP_NOT_FOUND));
+    }
+
+    private Trip getTrip(Long tripId) {
+        return tripRepository.findById(tripId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.TRIP_NOT_FOUND));
+    }
+
+    private void validateParticipant(User user, Trip trip) {
+        if (trip.getParticipants().stream().anyMatch(participant -> participant.getUser().equals(user))) {
+            throw new ConflictException(ErrorMessage.DUPLICATE_PARTICIPANT);
+        }
+    }
+
+    private void entryParticipant(TripEntryRequest request, User user, Trip trip) {
+        Participant participant = Participant.createParticipant(Role.PARTICIPATION, request.styleA(),
+                request.styleB(), request.styleC(), request.styleD(), request.styleE(), user, trip);
+        participantRepository.save(participant);
     }
 
     private boolean isDuplicateCode(String code) {
