@@ -35,4 +35,11 @@ public class TodoApiController {
         final List<TodoGetResponse> response = todoService.getTripTodos(userId, tripId, category, progress);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
+
+    @GetMapping("/todos/{todoId}")
+    public ResponseEntity<ApiResponse<?>> getTripTodo(@UserId final Long userId,
+                                                      @PathVariable final Long todoId) {
+        final TodoGetResponse response = todoService.getTripTodo(userId, todoId);
+        return ApiResponseUtil.success(SuccessMessage.OK, response);
+    }
 }
