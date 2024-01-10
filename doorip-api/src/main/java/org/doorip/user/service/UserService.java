@@ -43,7 +43,7 @@ public class UserService {
         Platform enumPlatform = getEnumPlatformFromStringPlatform(request.platform());
         String platformId = getPlatformId(token, enumPlatform);
         User findUser = getUser(enumPlatform, platformId);
-        boolean isResult = validateResult(findUser);
+        boolean isResult = hasResult(findUser);
         Token issueToken = jwtProvider.issueToken(findUser.getId());
         updateRefreshToken(issueToken.refreshToken(), findUser);
 
@@ -109,7 +109,7 @@ public class UserService {
         refreshTokenRepository.save(RefreshToken.createRefreshToken(user.getId(), refreshToken));
     }
 
-    private boolean validateResult(User user) {
+    private boolean hasResult(User user) {
         if (user.getResult() == null) {
             return false;
         }
