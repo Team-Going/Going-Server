@@ -42,4 +42,10 @@ public class TodoApiController {
         final TodoGetResponse response = todoService.getTripTodo(userId, todoId);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
+
+    @DeleteMapping("/todos/{todoId}")
+    public ResponseEntity<ApiResponse<?>> deleteTripTodo(@PathVariable final Long todoId) {
+        todoService.deleteTripTodo(todoId);
+        return ApiResponseUtil.success(SuccessMessage.OK);
+    }
 }
