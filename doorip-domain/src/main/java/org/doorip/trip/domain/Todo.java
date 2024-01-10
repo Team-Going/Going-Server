@@ -62,4 +62,12 @@ public class Todo extends BaseTimeEntity {
     public void removeAllocator(Allocator allocator) {
         allocators.remove(allocator);
     }
+
+    public void complete() {
+        this.progress = Progress.COMPLETE;
+    }
+
+    public void incomplete() {
+        this.progress = Progress.INCOMPLETE;
+    }
 }

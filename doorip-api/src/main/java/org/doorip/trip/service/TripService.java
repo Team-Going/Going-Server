@@ -1,7 +1,6 @@
 package org.doorip.trip.service;
 
 import lombok.RequiredArgsConstructor;
-import org.doorip.exception.ConflictException;
 import org.doorip.exception.EntityNotFoundException;
 import org.doorip.exception.InvalidValueException;
 import org.doorip.message.ErrorMessage;
@@ -17,6 +16,7 @@ import org.doorip.trip.dto.response.TripResponse;
 import org.doorip.common.Constants;
 import org.doorip.trip.dto.response.TripGetResponse;
 import org.doorip.trip.repository.ParticipantRepository;
+import org.doorip.trip.dto.response.TripResponse;
 import org.doorip.trip.repository.TripRepository;
 import org.doorip.user.domain.User;
 import org.doorip.user.repository.UserRepository;
@@ -24,9 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.UUID;
-
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -52,7 +51,6 @@ public class TripService {
     public TripEntryResponse entryTrip(Long userId, Long tripId, TripEntryRequest request) {
         User findUser = getUser(userId);
         Trip findTrip = getTrip(tripId);
-//        여행에 User가 이미 있으면 에러
         validateParticipant(findUser, findTrip);
         entryParticipant(request, findUser, findTrip);
 
