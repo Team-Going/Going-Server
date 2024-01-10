@@ -124,9 +124,8 @@ public class TripService {
     }
 
     private void createAndSaveParticipant(TripEntryRequest request, User user, Trip trip) {
-        Participant participant = Participant.createParticipant(Role.PARTICIPATION, request.styleA(),
+        Participant.createParticipant(Role.PARTICIPATION, request.styleA(),
                 request.styleB(), request.styleC(), request.styleD(), request.styleE(), user, trip);
-        participantRepository.save(participant);
     }
 
     private boolean isDuplicateCode(String code) {
