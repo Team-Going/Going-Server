@@ -1,7 +1,6 @@
 package org.doorip.trip.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.doorip.common.Constants;
 import org.doorip.exception.EntityNotFoundException;
 import org.doorip.exception.InvalidValueException;
@@ -21,7 +20,6 @@ import java.util.List;
 
 import static org.doorip.trip.domain.Allocator.createAllocator;
 
-@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
@@ -42,6 +40,12 @@ public class TodoService {
     public List<TodoGetResponse> getTripTodos(Long userId, Long tripId, String category, String progress) {
         List<Todo> todos = getTripTodosAccordingToCategoryAndProgress(userId, tripId, category, progress);
         return getTripTodosResponse(userId, todos);
+    }
+
+    public TodoGetResponse getTripTodo(Long userId, Long todoId) {
+        Todo findTodo = getTodo(todoId);
+        List<TodoAllocatorResponse> allocatorResponses = getAndSortAllocatorsResponses(userId, findTodo);
+        return TodoGetResponse.of(findTodo, allocatorResponses);
     }
 
     private void validateAllocators(List<Long> allocators) {
@@ -78,13 +82,15 @@ public class TodoService {
     private List<TodoGetResponse> getTripTodosResponse(Long userId, List<Todo> todos) {
         List<TodoGetResponse> response = new ArrayList<>();
         todos.forEach(todo -> {
-            List<Allocator> allocators = todo.getAllocators();
-            List<TodoAllocatorResponse> allocatorResponses = getAllocatorResponses(userId, allocators);
-            TodoAllocatorResponse ownerAllocator = getOwnerAllocator(allocatorResponses);
-            sortAllocators(ownerAllocator, allocatorResponses);
+            List<TodoAllocatorResponse> allocatorResponses = getAndSortAllocatorsResponses(userId, todo);
             response.add(TodoGetResponse.of(todo, allocatorResponses));
         });
         return response;
+    }
+
+    private Todo getTodo(Long todoId) {
+        return todoRepository.findById(todoId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.TODO_NOT_FOUND));
     }
 
     private Participant getParticipant(Long participantId) {
@@ -109,6 +115,15 @@ public class TodoService {
         }
         throw new InvalidValueException(ErrorMessage.INVALID_REQUEST_PARAMETER_VALUE);
     }
+
+    private List<TodoAllocatorResponse> getAndSortAllocatorsResponses(Long userId, Todo todo) {
+        List<Allocator> allocators = todo.getAllocators();
+        List<TodoAllocatorResponse> allocatorResponses = getAllocatorResponses(userId, allocators);
+        TodoAllocatorResponse ownerAllocator = getOwnerAllocator(allocatorResponses);
+        sortAllocators(ownerAllocator, allocatorResponses);
+        return allocatorResponses;
+    }
+
 
     private List<TodoAllocatorResponse> getAllocatorResponses(Long userId, List<Allocator> allocators) {
         return new ArrayList<>(allocators.stream()
