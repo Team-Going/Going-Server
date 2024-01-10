@@ -10,6 +10,7 @@ import org.doorip.user.dto.request.UserSignInRequest;
 import org.doorip.user.dto.request.UserSignUpRequest;
 import org.doorip.user.dto.response.ProfileGetResponse;
 import org.doorip.user.dto.response.UserResponse;
+import org.doorip.user.dto.response.UserSignInResponse;
 import org.doorip.user.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,7 +27,7 @@ public class UserApiController {
     @PostMapping("/signin")
     public ResponseEntity<ApiResponse<?>> signIn(@RequestHeader(AUTHORIZATION) final String token,
                                                  @RequestBody final UserSignInRequest request) {
-        final UserResponse response = userService.signIn(token, request);
+        final UserSignInResponse response = userService.signIn(token, request);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
