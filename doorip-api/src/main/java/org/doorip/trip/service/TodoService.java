@@ -53,6 +53,12 @@ public class TodoService {
         todoRepository.deleteById(todoId);
     }
 
+    @Transactional
+    public void completeTripTodo(Long todoId) {
+        Todo findTodo = getTodo(todoId);
+        findTodo.complete();
+    }
+
     private void validateAllocators(List<Long> allocators) {
         if (allocators.isEmpty()) {
             throw new InvalidValueException(ErrorMessage.INVALID_ALLOCATOR_COUNT);
