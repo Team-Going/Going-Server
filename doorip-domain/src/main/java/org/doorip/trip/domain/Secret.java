@@ -5,9 +5,9 @@ public enum Secret {
 
     public static Secret of(boolean isSecret) {
         if (isSecret) {
-            return OUR;
+            return MY;
         }
-        return MY;
+        return OUR;
     }
 
     public static boolean of(Secret secret) {
