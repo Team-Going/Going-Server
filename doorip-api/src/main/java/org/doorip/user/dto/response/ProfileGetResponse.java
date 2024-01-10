@@ -5,7 +5,7 @@ import org.doorip.user.domain.User;
 public record ProfileGetResponse(
         String name,
         String intro,
-        int result
+        String result
 ) {
 
     public static ProfileGetResponse of(User user) {
