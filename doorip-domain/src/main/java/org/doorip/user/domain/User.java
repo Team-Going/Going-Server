@@ -23,7 +23,7 @@ public class User extends BaseTimeEntity {
     private String name;
     @Column(nullable = false)
     private String intro;
-    private Integer result;
+    private String result;
     @Column(nullable = false)
     private String platformId;
     @Column(nullable = false)
