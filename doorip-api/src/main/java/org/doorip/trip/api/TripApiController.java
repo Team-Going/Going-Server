@@ -8,10 +8,8 @@ import org.doorip.message.SuccessMessage;
 import org.doorip.trip.dto.request.TripCreateRequest;
 import org.doorip.trip.dto.request.TripEntryRequest;
 import org.doorip.trip.dto.request.TripVerifyRequest;
-import org.doorip.trip.dto.response.TripCreateResponse;
-import org.doorip.trip.dto.response.TripEntryResponse;
-import org.doorip.trip.dto.response.TripGetResponse;
-import org.doorip.trip.dto.response.TripResponse;
+import org.doorip.trip.dto.response.*;
+import org.doorip.trip.service.TripDetailService;
 import org.doorip.trip.service.TripService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class TripApiController {
     private final TripService tripService;
+    private final TripDetailService tripDetailService;
 
     @PostMapping
     public ResponseEntity<ApiResponse<?>> createTrip(@UserId final Long userId,
@@ -49,5 +48,11 @@ public class TripApiController {
                                                     @RequestBody final TripEntryRequest request) {
         final TripEntryResponse response = tripService.entryTrip(userId, tripId, request);
         return ApiResponseUtil.success(SuccessMessage.CREATED, response);
+    }
+
+    @GetMapping("/{tripId}/my")
+    public ResponseEntity<ApiResponse<?>> getMyTodoDetail(@PathVariable final Long tripId) {
+        final MyTodoResponse response = tripDetailService.getMyTodoDetail(tripId);
+        return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 }
