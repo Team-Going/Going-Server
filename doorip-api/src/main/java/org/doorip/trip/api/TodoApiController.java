@@ -48,4 +48,10 @@ public class TodoApiController {
         todoService.deleteTripTodo(todoId);
         return ApiResponseUtil.success(SuccessMessage.OK);
     }
+
+    @GetMapping("/todos/{todoId}/complete")
+    public ResponseEntity<ApiResponse<?>> completeTripTodo(@PathVariable final Long todoId) {
+        todoService.completeTripTodo(todoId);
+        return ApiResponseUtil.success(SuccessMessage.OK);
+    }
 }
