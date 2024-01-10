@@ -54,4 +54,10 @@ public class TodoApiController {
         todoService.completeTripTodo(todoId);
         return ApiResponseUtil.success(SuccessMessage.OK);
     }
+
+    @GetMapping("/todos/{todoId}/incomplete")
+    public ResponseEntity<ApiResponse<?>> incompleteTripTodo(@PathVariable final Long todoId) {
+        todoService.incompleteTripTodo(todoId);
+        return ApiResponseUtil.success(SuccessMessage.OK);
+    }
 }
