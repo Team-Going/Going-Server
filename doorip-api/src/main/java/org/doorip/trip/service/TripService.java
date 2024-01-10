@@ -52,8 +52,8 @@ public class TripService {
     public TripEntryResponse entryTrip(Long userId, Long tripId, TripEntryRequest request) {
         User findUser = getUser(userId);
         Trip findTrip = getTrip(tripId);
-        validateParticipant(findUser, findTrip);
-        entryParticipant(request, findUser, findTrip);
+        validateDuplicateParticipant(findUser, findTrip);
+        createAndSaveParticipant(request, findUser, findTrip);
 
         return TripEntryResponse.of(findTrip);
     }
@@ -118,13 +118,13 @@ public class TripService {
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.TRIP_NOT_FOUND));
     }
 
-    private void validateParticipant(User user, Trip trip) {
-        if (trip.getParticipants().stream().anyMatch(participant -> participant.getUser().equals(user))) {
+    private void validateDuplicateParticipant(User user, Trip trip) {
+            if (participantRepository.existsByUserAndTrip(user, trip)) {
             throw new ConflictException(ErrorMessage.DUPLICATE_PARTICIPANT);
         }
     }
 
-    private void entryParticipant(TripEntryRequest request, User user, Trip trip) {
+    private void createAndSaveParticipant(TripEntryRequest request, User user, Trip trip) {
         Participant participant = Participant.createParticipant(Role.PARTICIPATION, request.styleA(),
                 request.styleB(), request.styleC(), request.styleD(), request.styleE(), user, trip);
         participantRepository.save(participant);
