@@ -18,6 +18,7 @@ import org.doorip.user.dto.request.UserSignInRequest;
 import org.doorip.user.dto.request.UserSignUpRequest;
 import org.doorip.user.dto.response.ProfileGetResponse;
 import org.doorip.user.dto.response.UserResponse;
+import org.doorip.user.dto.response.UserSignInResponse;
 import org.doorip.user.repository.RefreshTokenRepository;
 import org.doorip.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -38,15 +39,15 @@ public class UserService {
     private final AppleOAuthProvider appleOAuthProvider;
     private final KakaoOAuthProvider kakaoOAuthProvider;
 
-    public UserResponse signIn(String token, UserSignInRequest request) {
+    public UserSignInResponse signIn(String token, UserSignInRequest request) {
         Platform enumPlatform = getEnumPlatformFromStringPlatform(request.platform());
         String platformId = getPlatformId(token, enumPlatform);
         User findUser = getUser(enumPlatform, platformId);
-        validateResult(findUser);
+        boolean isResult = validateResult(findUser);
         Token issueToken = jwtProvider.issueToken(findUser.getId());
         updateRefreshToken(issueToken.refreshToken(), findUser);
 
-        return UserResponse.of(issueToken);
+        return UserSignInResponse.of(issueToken, isResult);
     }
 
     public UserResponse signUp(String token, UserSignUpRequest request) {
@@ -108,10 +109,11 @@ public class UserService {
         refreshTokenRepository.save(RefreshToken.createRefreshToken(user.getId(), refreshToken));
     }
 
-    private void validateResult(User user) {
+    private Boolean validateResult(User user) {
         if (user.getResult() == null) {
-            throw new EntityNotFoundException(ErrorMessage.RESULT_NOT_FOUND);
+            return false;
         }
+        return true;
     }
 
     private User saveUser(UserSignUpRequest request, String platformId, Platform enumPlatform) {
