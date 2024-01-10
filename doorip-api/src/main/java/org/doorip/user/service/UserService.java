@@ -109,7 +109,7 @@ public class UserService {
         refreshTokenRepository.save(RefreshToken.createRefreshToken(user.getId(), refreshToken));
     }
 
-    private Boolean validateResult(User user) {
+    private boolean validateResult(User user) {
         if (user.getResult() == null) {
             return false;
         }
