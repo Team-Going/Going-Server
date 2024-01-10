@@ -1,6 +1,7 @@
 package org.doorip.trip.service;
 
 import lombok.RequiredArgsConstructor;
+import org.doorip.exception.ConflictException;
 import org.doorip.exception.EntityNotFoundException;
 import org.doorip.exception.InvalidValueException;
 import org.doorip.message.ErrorMessage;
