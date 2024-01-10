@@ -2,6 +2,7 @@ package org.doorip.trip.service;
 
 import lombok.RequiredArgsConstructor;
 import org.doorip.common.Constants;
+import org.doorip.exception.ConflictException;
 import org.doorip.exception.EntityNotFoundException;
 import org.doorip.exception.InvalidValueException;
 import org.doorip.message.ErrorMessage;
@@ -9,10 +10,13 @@ import org.doorip.trip.domain.Participant;
 import org.doorip.trip.domain.Role;
 import org.doorip.trip.domain.Trip;
 import org.doorip.trip.dto.request.TripCreateRequest;
+import org.doorip.trip.dto.request.TripEntryRequest;
 import org.doorip.trip.dto.request.TripVerifyRequest;
 import org.doorip.trip.dto.response.TripCreateResponse;
+import org.doorip.trip.dto.response.TripEntryResponse;
 import org.doorip.trip.dto.response.TripGetResponse;
 import org.doorip.trip.dto.response.TripResponse;
+import org.doorip.trip.repository.ParticipantRepository;
 import org.doorip.trip.repository.TripRepository;
 import org.doorip.user.domain.User;
 import org.doorip.user.repository.UserRepository;
@@ -29,6 +33,7 @@ import java.util.UUID;
 public class TripService {
     private final TripRepository tripRepository;
     private final UserRepository userRepository;
+    private final ParticipantRepository participantRepository;
 
     @Transactional
     public TripCreateResponse createTripAndParticipant(Long userId, TripCreateRequest request) {
@@ -38,7 +43,18 @@ public class TripService {
         Trip trip = createTrip(request, code);
         createParticipant(request, findUser, trip);
         tripRepository.save(trip);
+
         return TripCreateResponse.of(trip);
+    }
+
+    @Transactional
+    public TripEntryResponse entryTrip(Long userId, Long tripId, TripEntryRequest request) {
+        User findUser = getUser(userId);
+        Trip findTrip = getTrip(tripId);
+        validateDuplicateParticipant(findUser, findTrip);
+        createAndSaveParticipant(request, findUser, findTrip);
+
+        return TripEntryResponse.of(findTrip);
     }
 
     public TripGetResponse getTrips(Long userId, String progress) {
@@ -94,6 +110,23 @@ public class TripService {
     private Trip getTrip(String code) {
         return tripRepository.findByCode(code)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.TRIP_NOT_FOUND));
+    }
+
+    private Trip getTrip(Long tripId) {
+        return tripRepository.findById(tripId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.TRIP_NOT_FOUND));
+    }
+
+    private void validateDuplicateParticipant(User user, Trip trip) {
+        if (participantRepository.existsByUserAndTrip(user, trip)) {
+            throw new ConflictException(ErrorMessage.DUPLICATE_PARTICIPANT);
+        }
+    }
+
+    private void createAndSaveParticipant(TripEntryRequest request, User user, Trip trip) {
+        Participant participant = Participant.createParticipant(Role.PARTICIPATION, request.styleA(),
+                request.styleB(), request.styleC(), request.styleD(), request.styleE(), user, trip);
+        participantRepository.save(participant);
     }
 
     private boolean isDuplicateCode(String code) {
