@@ -11,10 +11,7 @@ import org.doorip.exception.UnauthorizedException;
 import org.doorip.message.ErrorMessage;
 import org.doorip.openfeign.apple.AppleOAuthProvider;
 import org.doorip.openfeign.kakao.KakaoOAuthProvider;
-import org.doorip.user.domain.MappingIndex;
-import org.doorip.user.domain.Platform;
-import org.doorip.user.domain.RefreshToken;
-import org.doorip.user.domain.User;
+import org.doorip.user.domain.*;
 import org.doorip.user.dto.request.ResultUpdateRequest;
 import org.doorip.user.dto.request.UserReissueRequest;
 import org.doorip.user.dto.request.UserSignInRequest;
@@ -33,6 +30,7 @@ import java.util.stream.Collectors;
 import static org.doorip.user.domain.Platform.APPLE;
 import static org.doorip.user.domain.Platform.getEnumPlatformFromStringPlatform;
 import static org.doorip.user.domain.RefreshToken.createRefreshToken;
+import static org.doorip.user.domain.Result.getEnumResultFromStringResult;
 import static org.doorip.user.domain.User.createUser;
 
 @RequiredArgsConstructor
@@ -101,11 +99,12 @@ public class UserService {
         User findUser = getUser(userId);
         validateResult(request);
         List<MappingIndex> mappedIndex = mappingIndex(request.result());
-        String resultA = oneTypeResult(mappedIndex.subList(0,3), "S", "A");
-        String resultB = oneTypeResult(mappedIndex.subList(3,6), "R", "E");
-        String resultC = oneTypeResult(mappedIndex.subList(6,9), "P", "I");
+        String stringResult = oneTypeResult(mappedIndex.subList(0,3), "S", "A")
+                + oneTypeResult(mappedIndex.subList(3,6), "R", "E")
+                + oneTypeResult(mappedIndex.subList(6,9), "P", "I");
 
-        findUser.updateResult(resultA + resultB + resultC);
+        Result result = getEnumResultFromStringResult(stringResult);
+        findUser.updateResult(result);
     }
 
     private void validateCompletedPropensityTest(User findUser) {
@@ -203,6 +202,10 @@ public class UserService {
     }
 
     private String oneTypeResult(List<MappingIndex> group, String A, String B) {
-        return (group.stream().filter(index -> index == MappingIndex.FIRST).count() >= 2) ? A : B;
+        if (group.stream().filter(index -> index == MappingIndex.FIRST).count() >= 2) {
+            return A;
+        } else {
+            return B;
+        }
     }
 }
