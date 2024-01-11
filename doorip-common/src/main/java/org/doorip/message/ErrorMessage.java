@@ -51,6 +51,7 @@ public enum ErrorMessage {
     PARTICIPANT_NOT_FOUND(HttpStatus.NOT_FOUND, "e4044", "존재하지 않는 참여자입니다."),
     RESULT_NOT_FOUND(HttpStatus.NOT_FOUND, "e4045", "유저의 성향 결과 값을 찾을 수 없습니다."),
     TODO_NOT_FOUND(HttpStatus.NOT_FOUND, "e4046", "존재하지 않는 여행 TODO입니다."),
+    OWNER_NOT_FOUND(HttpStatus.NOT_FOUND, "e4047", "해당 여행에 참여자로 존재하지 않습니다."),
 
     /**
      * 405 Method Not Allowed
