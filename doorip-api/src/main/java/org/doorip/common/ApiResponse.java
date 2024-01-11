@@ -13,7 +13,6 @@ import org.doorip.message.SuccessMessage;
 @Getter
 public class ApiResponse<T> {
     private final int status;
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
     private final String code;
     private final String message;
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -22,6 +21,7 @@ public class ApiResponse<T> {
     public static ApiResponse<?> of(SuccessMessage successMessage) {
         return builder()
                 .status(successMessage.getHttpStatus().value())
+                .code(successMessage.getCode())
                 .message(successMessage.getMessage())
                 .build();
     }
@@ -29,6 +29,7 @@ public class ApiResponse<T> {
     public static <T> ApiResponse<?> of(SuccessMessage successMessage, T data) {
         return builder()
                 .status(successMessage.getHttpStatus().value())
+                .code(successMessage.getCode())
                 .message(successMessage.getMessage())
                 .data(data)
                 .build();
