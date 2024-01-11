@@ -1,12 +1,14 @@
 package org.doorip.trip.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AccessLevel;
+import lombok.Builder;
 import org.doorip.trip.domain.Trip;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
-import static java.time.Period.between;
-
+@Builder(access = AccessLevel.PRIVATE)
 public record TripCreateResponse(
         Long tripId,
         String title,
@@ -19,13 +21,13 @@ public record TripCreateResponse(
 ) {
 
     public static TripCreateResponse of(Trip trip) {
-        return new TripCreateResponse(
-                trip.getId(),
-                trip.getTitle(),
-                trip.getStartDate(),
-                trip.getEndDate(),
-                trip.getCode(),
-                between(LocalDate.now(), trip.getStartDate()).getDays()
-        );
+        return TripCreateResponse.builder()
+                .tripId(trip.getId())
+                .title(trip.getTitle())
+                .startDate(trip.getStartDate())
+                .endDate(trip.getEndDate())
+                .code(trip.getCode())
+                .day((int) ChronoUnit.DAYS.between(LocalDate.now(), trip.getStartDate()))
+                .build();
     }
 }

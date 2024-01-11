@@ -6,8 +6,7 @@ import lombok.Builder;
 import org.doorip.trip.domain.Trip;
 
 import java.time.LocalDate;
-
-import static java.time.Period.between;
+import java.time.temporal.ChronoUnit;
 
 @Builder(access = AccessLevel.PRIVATE)
 public record TripResponse(
@@ -25,7 +24,7 @@ public record TripResponse(
                 .title(trip.getTitle())
                 .startDate(trip.getStartDate())
                 .endDate(trip.getEndDate())
-                .day(between(LocalDate.now(), trip.getStartDate()).getDays())
+                .day((int) ChronoUnit.DAYS.between(LocalDate.now(), trip.getStartDate()))
                 .build();
     }
 }
