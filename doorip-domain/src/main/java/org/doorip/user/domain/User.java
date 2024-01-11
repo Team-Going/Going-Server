@@ -23,7 +23,8 @@ public class User extends BaseTimeEntity {
     private String name;
     @Column(nullable = false)
     private String intro;
-    private String result;
+    @Enumerated(EnumType.STRING)
+    private Result result;
     @Column(nullable = false)
     private String platformId;
     @Column(nullable = false)
@@ -48,7 +49,7 @@ public class User extends BaseTimeEntity {
         this.refreshToken = refreshToken;
     }
 
-    public void updateResult(String result) {
+    public void updateResult(Result result) {
         this.result = result;
     }
 }
