@@ -13,7 +13,7 @@ import java.util.List;
 public record TodoGetResponse(
         Long todoId,
         String title,
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd", timezone = "Asia/Seoul")
         LocalDate endDate,
         List<TodoAllocatorResponse> allocators,
         boolean secret

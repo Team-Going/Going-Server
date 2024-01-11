@@ -20,6 +20,7 @@ public class Todo extends BaseTimeEntity {
     private Long id;
     @Column(nullable = false)
     private String title;
+    @Column(nullable = false)
     private LocalDate endDate;
     private String memo;
     @Column(nullable = false)
