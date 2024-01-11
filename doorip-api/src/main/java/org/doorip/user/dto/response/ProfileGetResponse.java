@@ -5,14 +5,14 @@ import org.doorip.user.domain.User;
 public record ProfileGetResponse(
         String name,
         String intro,
-        String result
+        int result
 ) {
 
     public static ProfileGetResponse of(User user) {
         return new ProfileGetResponse(
                 user.getName(),
                 user.getIntro(),
-                user.getResult()
+                user.getResult().getNumResult()
         );
     }
 }

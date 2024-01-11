@@ -6,13 +6,13 @@ import org.doorip.auth.jwt.JwtValidator;
 import org.doorip.auth.jwt.Token;
 import org.doorip.exception.ConflictException;
 import org.doorip.exception.EntityNotFoundException;
+import org.doorip.exception.InvalidValueException;
 import org.doorip.exception.UnauthorizedException;
 import org.doorip.message.ErrorMessage;
 import org.doorip.openfeign.apple.AppleOAuthProvider;
 import org.doorip.openfeign.kakao.KakaoOAuthProvider;
-import org.doorip.user.domain.Platform;
-import org.doorip.user.domain.RefreshToken;
-import org.doorip.user.domain.User;
+import org.doorip.user.domain.*;
+import org.doorip.user.dto.request.ResultUpdateRequest;
 import org.doorip.user.dto.request.UserReissueRequest;
 import org.doorip.user.dto.request.UserSignInRequest;
 import org.doorip.user.dto.request.UserSignUpRequest;
@@ -24,9 +24,13 @@ import org.doorip.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.doorip.user.domain.Platform.APPLE;
 import static org.doorip.user.domain.Platform.getEnumPlatformFromStringPlatform;
 import static org.doorip.user.domain.RefreshToken.createRefreshToken;
+import static org.doorip.user.domain.Result.getEnumResultFromStringResult;
 import static org.doorip.user.domain.User.createUser;
 
 @RequiredArgsConstructor
@@ -89,6 +93,18 @@ public class UserService {
     public ProfileGetResponse getProfile(Long userId) {
         User findUser = getUser(userId);
         return ProfileGetResponse.of(findUser);
+    }
+
+    public void updateResult(Long userId, ResultUpdateRequest request) {
+        User findUser = getUser(userId);
+        validateResult(request);
+        List<MappingIndex> mappedIndex = mappingIndex(request.result());
+        String stringResult = oneTypeResult(mappedIndex.subList(0,3), "S", "A")
+                + oneTypeResult(mappedIndex.subList(3,6), "R", "E")
+                + oneTypeResult(mappedIndex.subList(6,9), "P", "I");
+
+        Result result = getEnumResultFromStringResult(stringResult);
+        findUser.updateResult(result);
     }
 
     private void validateCompletedPropensityTest(User findUser) {
@@ -163,5 +179,33 @@ public class UserService {
         RefreshToken storedRefreshToken = refreshTokenRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.REFRESH_TOKEN_NOT_FOUND));
         return storedRefreshToken.getRefreshToken();
+    }
+
+    private void validateResult(ResultUpdateRequest request) {
+        if (request.result().size() != 9) {
+            throw new InvalidValueException(ErrorMessage.INVALID_RESULT_TYPE);
+        }
+    }
+
+    private List<MappingIndex> mappingIndex(List<Integer> numbers) {
+        return numbers.stream()
+                .map(this::integerToEnum)
+                .collect(Collectors.toList());
+    }
+
+    private MappingIndex integerToEnum(Integer value) {
+        return switch (value) {
+            case 0, 1 -> MappingIndex.FIRST;
+            case 2, 3 -> MappingIndex.SECOND;
+            default -> throw new InvalidValueException(ErrorMessage.INVALID_RESULT_TYPE);
+        };
+    }
+
+    private String oneTypeResult(List<MappingIndex> group, String A, String B) {
+        if (group.stream().filter(index -> index == MappingIndex.FIRST).count() >= 2) {
+            return A;
+        } else {
+            return B;
+        }
     }
 }

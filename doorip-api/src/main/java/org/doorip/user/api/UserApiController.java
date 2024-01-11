@@ -5,6 +5,7 @@ import org.doorip.auth.UserId;
 import org.doorip.common.ApiResponse;
 import org.doorip.common.ApiResponseUtil;
 import org.doorip.message.SuccessMessage;
+import org.doorip.user.dto.request.ResultUpdateRequest;
 import org.doorip.user.dto.request.UserReissueRequest;
 import org.doorip.user.dto.request.UserSignInRequest;
 import org.doorip.user.dto.request.UserSignUpRequest;
@@ -67,5 +68,12 @@ public class UserApiController {
     public ResponseEntity<ApiResponse<?>> getProfile(@UserId final Long userId) {
         final ProfileGetResponse response = userService.getProfile(userId);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
+    }
+
+    @PatchMapping("/test")
+    public ResponseEntity<ApiResponse<?>> updateResult(@UserId final Long userId,
+                                                       @RequestBody ResultUpdateRequest request) {
+        userService.updateResult(userId, request);
+        return ApiResponseUtil.success(SuccessMessage.OK);
     }
 }
