@@ -62,4 +62,11 @@ public class TripApiController {
         final OurTodoResponse response = tripDetailService.getOurTodoDetail(userId, tripId);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
+
+    @GetMapping("/{tripId}/participants")
+    public ResponseEntity<ApiResponse<?>> getParticipants(@UserId final Long userId,
+                                                          @PathVariable final Long tripId) {
+        final TripParticipantGetResponse response = tripDetailService.getParticipants(userId, tripId);
+        return ApiResponseUtil.success(SuccessMessage.OK, response);
+    }
 }
