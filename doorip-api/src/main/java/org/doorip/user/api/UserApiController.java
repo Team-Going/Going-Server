@@ -24,6 +24,12 @@ import static org.doorip.common.Constants.AUTHORIZATION;
 public class UserApiController {
     private final UserService userService;
 
+    @GetMapping("/splash")
+    public ResponseEntity<ApiResponse<?>> splash(@UserId final Long userId) {
+        userService.splash(userId);
+        return ApiResponseUtil.success(SuccessMessage.OK);
+    }
+
     @PostMapping("/signin")
     public ResponseEntity<ApiResponse<?>> signIn(@RequestHeader(AUTHORIZATION) final String token,
                                                  @RequestBody final UserSignInRequest request) {
