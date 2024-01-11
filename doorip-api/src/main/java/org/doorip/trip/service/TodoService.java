@@ -8,6 +8,7 @@ import org.doorip.message.ErrorMessage;
 import org.doorip.trip.domain.*;
 import org.doorip.trip.dto.request.TodoCreateRequest;
 import org.doorip.trip.dto.response.TodoAllocatorResponse;
+import org.doorip.trip.dto.response.TodoDetailGetResponse;
 import org.doorip.trip.dto.response.TodoGetResponse;
 import org.doorip.trip.repository.ParticipantRepository;
 import org.doorip.trip.repository.TodoRepository;
@@ -42,10 +43,10 @@ public class TodoService {
         return getTripTodosResponse(userId, todos);
     }
 
-    public TodoGetResponse getTripTodo(Long userId, Long todoId) {
+    public TodoDetailGetResponse getTripTodo(Long userId, Long todoId) {
         Todo findTodo = getTodo(todoId);
         List<TodoAllocatorResponse> allocatorResponses = getAndSortAllocatorsResponses(userId, findTodo);
-        return TodoGetResponse.of(findTodo, allocatorResponses);
+        return TodoDetailGetResponse.of(findTodo, allocatorResponses);
     }
 
     @Transactional

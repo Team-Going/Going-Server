@@ -6,6 +6,7 @@ import org.doorip.common.ApiResponse;
 import org.doorip.common.ApiResponseUtil;
 import org.doorip.message.SuccessMessage;
 import org.doorip.trip.dto.request.TodoCreateRequest;
+import org.doorip.trip.dto.response.TodoDetailGetResponse;
 import org.doorip.trip.dto.response.TodoGetResponse;
 import org.doorip.trip.service.TodoService;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +40,7 @@ public class TodoApiController {
     @GetMapping("/todos/{todoId}")
     public ResponseEntity<ApiResponse<?>> getTripTodo(@UserId final Long userId,
                                                       @PathVariable final Long todoId) {
-        final TodoGetResponse response = todoService.getTripTodo(userId, todoId);
+        final TodoDetailGetResponse response = todoService.getTripTodo(userId, todoId);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
