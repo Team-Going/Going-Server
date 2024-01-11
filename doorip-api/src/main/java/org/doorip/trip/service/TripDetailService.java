@@ -1,7 +1,6 @@
 package org.doorip.trip.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.doorip.exception.EntityNotFoundException;
 import org.doorip.message.ErrorMessage;
 import org.doorip.trip.domain.Participant;
@@ -24,7 +23,6 @@ import java.util.*;
 import static java.lang.Math.round;
 import static org.doorip.common.Constants.*;
 
-@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
