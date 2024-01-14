@@ -14,5 +14,6 @@ public abstract class Constants {
     public static final String STYLE_D = "style_d";
     public static final String STYLE_E = "style_e";
     public static final int MIN_STYLE_RATE = 0;
-    public static final int MAX_STYLE_RATE = 4;
+    public static final int MAX_STYLE_RATE = 100;
+    public static final int PROPENSITY_WEIGHT = 25;
 }
