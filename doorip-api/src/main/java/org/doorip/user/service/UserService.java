@@ -17,8 +17,8 @@ import org.doorip.user.dto.request.UserReissueRequest;
 import org.doorip.user.dto.request.UserSignInRequest;
 import org.doorip.user.dto.request.UserSignUpRequest;
 import org.doorip.user.dto.response.ProfileGetResponse;
-import org.doorip.user.dto.response.UserResponse;
 import org.doorip.user.dto.response.UserSignInResponse;
+import org.doorip.user.dto.response.UserSignUpResponse;
 import org.doorip.user.repository.RefreshTokenRepository;
 import org.doorip.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -57,17 +57,17 @@ public class UserService {
         boolean isResult = hasResult(findUser);
         Token issueToken = jwtProvider.issueToken(findUser.getId());
         updateRefreshToken(issueToken.refreshToken(), findUser);
-        return UserSignInResponse.of(issueToken, isResult);
+        return UserSignInResponse.of(issueToken, isResult, findUser.getId());
     }
 
-    public UserResponse signUp(String token, UserSignUpRequest request) {
+    public UserSignUpResponse signUp(String token, UserSignUpRequest request) {
         Platform enumPlatform = getEnumPlatformFromStringPlatform(request.platform());
         String platformId = getPlatformId(token, enumPlatform);
         validateDuplicateUser(enumPlatform, platformId);
         User savedUser = saveUser(request, platformId, enumPlatform);
         Token issueToken = jwtProvider.issueToken(savedUser.getId());
         updateRefreshToken(issueToken.refreshToken(), savedUser);
-        return UserResponse.of(issueToken);
+        return UserSignUpResponse.of(issueToken, savedUser.getId());
     }
 
     public void signOut(Long userId) {
@@ -80,13 +80,13 @@ public class UserService {
     }
 
     @Transactional(noRollbackFor = UnauthorizedException.class)
-    public UserResponse reissue(String refreshToken, UserReissueRequest request) {
+    public UserSignUpResponse reissue(String refreshToken, UserReissueRequest request) {
         Long userId = request.userId();
         validateRefreshToken(refreshToken, userId);
         User findUser = getUser(userId);
         Token issueToken = jwtProvider.issueToken(userId);
         updateRefreshToken(issueToken.refreshToken(), findUser);
-        return UserResponse.of(issueToken);
+        return UserSignUpResponse.of(issueToken, findUser.getId());
     }
 
     @Transactional(readOnly = true)
@@ -99,9 +99,9 @@ public class UserService {
         User findUser = getUser(userId);
         validateResult(request);
         List<MappingIndex> mappedIndex = mappingIndex(request.result());
-        String stringResult = oneTypeResult(mappedIndex.subList(0,3), "S", "A")
-                + oneTypeResult(mappedIndex.subList(3,6), "R", "E")
-                + oneTypeResult(mappedIndex.subList(6,9), "P", "I");
+        String stringResult = oneTypeResult(mappedIndex.subList(0, 3), "S", "A")
+                + oneTypeResult(mappedIndex.subList(3, 6), "R", "E")
+                + oneTypeResult(mappedIndex.subList(6, 9), "P", "I");
 
         Result result = getEnumResultFromStringResult(stringResult);
         findUser.updateResult(result);

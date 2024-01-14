@@ -10,7 +10,7 @@ import org.doorip.user.dto.request.UserReissueRequest;
 import org.doorip.user.dto.request.UserSignInRequest;
 import org.doorip.user.dto.request.UserSignUpRequest;
 import org.doorip.user.dto.response.ProfileGetResponse;
-import org.doorip.user.dto.response.UserResponse;
+import org.doorip.user.dto.response.UserSignUpResponse;
 import org.doorip.user.dto.response.UserSignInResponse;
 import org.doorip.user.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +41,7 @@ public class UserApiController {
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<?>> signUp(@RequestHeader(AUTHORIZATION) final String token,
                                                  @RequestBody final UserSignUpRequest request) {
-        final UserResponse response = userService.signUp(token, request);
+        final UserSignUpResponse response = userService.signUp(token, request);
         return ApiResponseUtil.success(SuccessMessage.CREATED, response);
     }
 
@@ -60,7 +60,7 @@ public class UserApiController {
     @PostMapping("/reissue")
     public ResponseEntity<ApiResponse<?>> reissue(@RequestHeader(AUTHORIZATION) final String refreshtoken,
                                                   @RequestBody final UserReissueRequest request) {
-        UserResponse response = userService.reissue(refreshtoken, request);
+        final UserSignUpResponse response = userService.reissue(refreshtoken, request);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
@@ -72,7 +72,7 @@ public class UserApiController {
 
     @PatchMapping("/test")
     public ResponseEntity<ApiResponse<?>> updateResult(@UserId final Long userId,
-                                                       @RequestBody ResultUpdateRequest request) {
+                                                       @RequestBody final ResultUpdateRequest request) {
         userService.updateResult(userId, request);
         return ApiResponseUtil.success(SuccessMessage.OK);
     }
