@@ -132,10 +132,10 @@ public class TripDetailService {
     }
 
     private void setDefaultPropensity(Participant participant, Map<String, Integer> propensity) {
-        propensity.put(STYLE_A, propensity.get(STYLE_A) + participant.getStyleA());
-        propensity.put(STYLE_B, propensity.get(STYLE_B) + participant.getStyleB());
-        propensity.put(STYLE_C, propensity.get(STYLE_C) + participant.getStyleC());
-        propensity.put(STYLE_D, propensity.get(STYLE_D) + participant.getStyleD());
-        propensity.put(STYLE_E, propensity.get(STYLE_E) + participant.getStyleE());
+        propensity.put(STYLE_A, propensity.get(STYLE_A) + participant.getStyleA() * PROPENSITY_WEIGHT);
+        propensity.put(STYLE_B, propensity.get(STYLE_B) + participant.getStyleB() * PROPENSITY_WEIGHT);
+        propensity.put(STYLE_C, propensity.get(STYLE_C) + participant.getStyleC() * PROPENSITY_WEIGHT);
+        propensity.put(STYLE_D, propensity.get(STYLE_D) + participant.getStyleD() * PROPENSITY_WEIGHT);
+        propensity.put(STYLE_E, propensity.get(STYLE_E) + participant.getStyleE() * PROPENSITY_WEIGHT);
     }
 }
