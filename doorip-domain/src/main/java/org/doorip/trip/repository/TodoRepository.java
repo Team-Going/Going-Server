@@ -38,4 +38,19 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
     List<Todo> findMyTodoByTripId(@Param("tripId") Long tripId, @Param("userId") Long userId, @Param("progress") Progress progress);
 
     int countTodoByTripIdAndProgress(Long tripId, Progress progress);
+
+    @Query("select count(*) " +
+            "from Todo d " +
+            "join Trip i " +
+            "on d.trip = i " +
+            "join Allocator a " +
+            "on a.todo = d " +
+            "join Participant p " +
+            "on a.participant = p " +
+            "join User u " +
+            "on p.user = u " +
+            "where i.id = :tripId " +
+            "and u.id = :userId " +
+            "and d.progress = :progress")
+    int countTodoByTripIdAndUserIdAndProgress(@Param("tripId") Long tripId, @Param("userId") Long userId, @Param("progress") Progress progress);
 }

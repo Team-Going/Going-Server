@@ -51,8 +51,9 @@ public class TripApiController {
     }
 
     @GetMapping("/{tripId}/my")
-    public ResponseEntity<ApiResponse<?>> getMyTodoDetail(@PathVariable final Long tripId) {
-        final MyTodoResponse response = tripDetailService.getMyTodoDetail(tripId);
+    public ResponseEntity<ApiResponse<?>> getMyTodoDetail(@UserId final Long userId,
+                                                          @PathVariable final Long tripId) {
+        final MyTodoResponse response = tripDetailService.getMyTodoDetail(userId, tripId);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 

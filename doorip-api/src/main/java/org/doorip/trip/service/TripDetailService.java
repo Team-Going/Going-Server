@@ -30,9 +30,9 @@ public class TripDetailService {
     private final TripRepository tripRepository;
     private final TodoRepository todoRepository;
 
-    public MyTodoResponse getMyTodoDetail(Long tripId) {
+    public MyTodoResponse getMyTodoDetail(Long userId, Long tripId) {
         Trip findTrip = getTrip(tripId);
-        int count = getIncompleteTodoCount(tripId);
+        int count = getIncompleteTodoCount(userId, tripId);
         return MyTodoResponse.of(findTrip.getTitle(), count);
     }
 
@@ -61,8 +61,8 @@ public class TripDetailService {
         };
     }
 
-    private int getIncompleteTodoCount(Long tripId) {
-        return todoRepository.countTodoByTripIdAndProgress(tripId, Progress.INCOMPLETE);
+    private int getIncompleteTodoCount(Long userId, Long tripId) {
+        return todoRepository.countTodoByTripIdAndUserIdAndProgress(tripId, userId, Progress.INCOMPLETE);
     }
 
     private boolean judgeTrip(Trip trip) {
