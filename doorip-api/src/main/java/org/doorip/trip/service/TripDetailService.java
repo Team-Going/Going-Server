@@ -32,8 +32,10 @@ public class TripDetailService {
 
     public MyTodoResponse getMyTodoDetail(Long userId, Long tripId) {
         Trip findTrip = getTrip(tripId);
+        List<Participant> participants = findTrip.getParticipants();
+        Participant ownerParticipant = getOwnerParticipant(userId, participants);
         int count = getIncompleteTodoCount(userId, tripId);
-        return MyTodoResponse.of(findTrip.getTitle(), count);
+        return MyTodoResponse.of(ownerParticipant.getId(), findTrip.getTitle(), count);
     }
 
     public OurTodoResponse getOurTodoDetail(Long userId, Long tripId) {
