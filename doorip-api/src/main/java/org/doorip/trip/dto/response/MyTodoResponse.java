@@ -5,12 +5,14 @@ import lombok.Builder;
 
 @Builder(access = AccessLevel.PRIVATE)
 public record MyTodoResponse(
-        String name,
+        Long participantId,
+        String title,
         int count
 ) {
-    public static MyTodoResponse of(String name, int count) {
+    public static MyTodoResponse of(Long participantId, String title, int count) {
         return MyTodoResponse.builder()
-                .name(name)
+                .participantId(participantId)
+                .title(title)
                 .count(count)
                 .build();
     }
