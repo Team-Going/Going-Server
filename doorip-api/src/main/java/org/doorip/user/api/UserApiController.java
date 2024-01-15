@@ -2,7 +2,7 @@ package org.doorip.user.api;
 
 import lombok.RequiredArgsConstructor;
 import org.doorip.auth.UserId;
-import org.doorip.common.ApiResponse;
+import org.doorip.common.BaseResponse;
 import org.doorip.common.ApiResponseUtil;
 import org.doorip.message.SuccessMessage;
 import org.doorip.user.dto.request.ResultUpdateRequest;
@@ -26,53 +26,53 @@ public class UserApiController {
     private final UserService userService;
 
     @GetMapping("/splash")
-    public ResponseEntity<ApiResponse<?>> splash(@UserId final Long userId) {
+    public ResponseEntity<BaseResponse<?>> splash(@UserId final Long userId) {
         userService.splash(userId);
         return ApiResponseUtil.success(SuccessMessage.OK);
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<ApiResponse<?>> signIn(@RequestHeader(AUTHORIZATION) final String token,
-                                                 @RequestBody final UserSignInRequest request) {
+    public ResponseEntity<BaseResponse<?>> signIn(@RequestHeader(AUTHORIZATION) final String token,
+                                                  @RequestBody final UserSignInRequest request) {
         final UserSignInResponse response = userService.signIn(token, request);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<ApiResponse<?>> signUp(@RequestHeader(AUTHORIZATION) final String token,
-                                                 @RequestBody final UserSignUpRequest request) {
+    public ResponseEntity<BaseResponse<?>> signUp(@RequestHeader(AUTHORIZATION) final String token,
+                                                  @RequestBody final UserSignUpRequest request) {
         final UserSignUpResponse response = userService.signUp(token, request);
         return ApiResponseUtil.success(SuccessMessage.CREATED, response);
     }
 
     @PatchMapping("/signout")
-    public ResponseEntity<ApiResponse<?>> signOut(@UserId final Long userId) {
+    public ResponseEntity<BaseResponse<?>> signOut(@UserId final Long userId) {
         userService.signOut(userId);
         return ApiResponseUtil.success(SuccessMessage.OK);
     }
 
     @DeleteMapping("/withdraw")
-    public ResponseEntity<ApiResponse<?>> withdraw(@UserId final Long userId) {
+    public ResponseEntity<BaseResponse<?>> withdraw(@UserId final Long userId) {
         userService.withdraw(userId);
         return ApiResponseUtil.success(SuccessMessage.OK);
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity<ApiResponse<?>> reissue(@RequestHeader(AUTHORIZATION) final String refreshtoken,
-                                                  @RequestBody final UserReissueRequest request) {
+    public ResponseEntity<BaseResponse<?>> reissue(@RequestHeader(AUTHORIZATION) final String refreshtoken,
+                                                   @RequestBody final UserReissueRequest request) {
         final UserSignUpResponse response = userService.reissue(refreshtoken, request);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<ApiResponse<?>> getProfile(@UserId final Long userId) {
+    public ResponseEntity<BaseResponse<?>> getProfile(@UserId final Long userId) {
         final ProfileGetResponse response = userService.getProfile(userId);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
     @PatchMapping("/test")
-    public ResponseEntity<ApiResponse<?>> updateResult(@UserId final Long userId,
-                                                       @RequestBody final ResultUpdateRequest request) {
+    public ResponseEntity<BaseResponse<?>> updateResult(@UserId final Long userId,
+                                                        @RequestBody final ResultUpdateRequest request) {
         userService.updateResult(userId, request);
         return ApiResponseUtil.success(SuccessMessage.OK);
     }

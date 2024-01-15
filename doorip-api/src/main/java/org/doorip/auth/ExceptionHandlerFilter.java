@@ -5,7 +5,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.doorip.common.ApiResponse;
+import org.doorip.common.BaseResponse;
 import org.doorip.common.Constants;
 import org.doorip.exception.UnauthorizedException;
 import org.doorip.message.ErrorMessage;
@@ -48,6 +48,6 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         response.setCharacterEncoding(Constants.CHARACTER_TYPE);
         response.setStatus(httpStatus.value());
         PrintWriter writer = response.getWriter();
-        writer.write(objectMapper.writeValueAsString(ApiResponse.of(errorMessage)));
+        writer.write(objectMapper.writeValueAsString(BaseResponse.of(errorMessage)));
     }
 }

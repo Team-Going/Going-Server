@@ -15,37 +15,37 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ResponseEntity<ApiResponse<?>> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
+    protected ResponseEntity<BaseResponse<?>> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
         log.error(">>> handle: MethodArgumentNotValidException ", e);
         return ApiResponseUtil.failure(ErrorMessage.BAD_REQUEST);
     }
 
     @ExceptionHandler(BindException.class)
-    protected ResponseEntity<ApiResponse<?>> handleBindException(final BindException e) {
+    protected ResponseEntity<BaseResponse<?>> handleBindException(final BindException e) {
         log.error(">>> handle: BindException ", e);
         return ApiResponseUtil.failure(ErrorMessage.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    protected ResponseEntity<ApiResponse<?>> handleMethodArgumentTypeMismatchException(final MethodArgumentTypeMismatchException e) {
+    protected ResponseEntity<BaseResponse<?>> handleMethodArgumentTypeMismatchException(final MethodArgumentTypeMismatchException e) {
         log.error(">>> handle: MethodArgumentTypeMismatchException ", e);
         return ApiResponseUtil.failure(ErrorMessage.BAD_REQUEST);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    protected ResponseEntity<ApiResponse<?>> handleHttpRequestMethodNotSupportedException(final HttpRequestMethodNotSupportedException e) {
+    protected ResponseEntity<BaseResponse<?>> handleHttpRequestMethodNotSupportedException(final HttpRequestMethodNotSupportedException e) {
         log.error(">>> handle: HttpRequestMethodNotSupportedException ", e);
         return ApiResponseUtil.failure(ErrorMessage.METHOD_NOT_ALLOWED);
     }
 
     @ExceptionHandler(BusinessException.class)
-    protected ResponseEntity<ApiResponse<?>> handleBusinessException(final BusinessException e) {
+    protected ResponseEntity<BaseResponse<?>> handleBusinessException(final BusinessException e) {
         log.error(">>> handle: BusinessException ", e);
         return ApiResponseUtil.failure(e.getErrorMessage());
     }
 
     @ExceptionHandler(Exception.class)
-    protected ResponseEntity<ApiResponse<?>> handleException(final Exception e) {
+    protected ResponseEntity<BaseResponse<?>> handleException(final Exception e) {
         log.error(">>> handle: Exception ", e);
         return ApiResponseUtil.failure(ErrorMessage.INTERNAL_SERVER_ERROR);
     }
