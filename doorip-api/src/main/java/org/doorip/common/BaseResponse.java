@@ -11,14 +11,14 @@ import org.doorip.message.SuccessMessage;
 @Builder(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class ApiResponse<T> {
+public class BaseResponse<T> {
     private final int status;
     private final String code;
     private final String message;
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     private final T data;
 
-    public static ApiResponse<?> of(SuccessMessage successMessage) {
+    public static BaseResponse<?> of(SuccessMessage successMessage) {
         return builder()
                 .status(successMessage.getHttpStatus().value())
                 .code(successMessage.getCode())
@@ -26,7 +26,7 @@ public class ApiResponse<T> {
                 .build();
     }
 
-    public static <T> ApiResponse<?> of(SuccessMessage successMessage, T data) {
+    public static <T> BaseResponse<?> of(SuccessMessage successMessage, T data) {
         return builder()
                 .status(successMessage.getHttpStatus().value())
                 .code(successMessage.getCode())
@@ -35,7 +35,7 @@ public class ApiResponse<T> {
                 .build();
     }
 
-    public static ApiResponse<?> of(ErrorMessage errorMessage) {
+    public static BaseResponse<?> of(ErrorMessage errorMessage) {
         return builder()
                 .status(errorMessage.getHttpStatus().value())
                 .code(errorMessage.getCode())

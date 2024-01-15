@@ -5,18 +5,18 @@ import org.doorip.message.SuccessMessage;
 import org.springframework.http.ResponseEntity;
 
 public interface ApiResponseUtil {
-    static ResponseEntity<ApiResponse<?>> success(SuccessMessage successMessage) {
+    static ResponseEntity<BaseResponse<?>> success(SuccessMessage successMessage) {
         return ResponseEntity.status(successMessage.getHttpStatus())
-                .body(ApiResponse.of(successMessage));
+                .body(BaseResponse.of(successMessage));
     }
 
-    static <T> ResponseEntity<ApiResponse<?>> success(SuccessMessage successMessage, T data) {
+    static <T> ResponseEntity<BaseResponse<?>> success(SuccessMessage successMessage, T data) {
         return ResponseEntity.status(successMessage.getHttpStatus())
-                .body(ApiResponse.of(successMessage, data));
+                .body(BaseResponse.of(successMessage, data));
     }
 
-    static ResponseEntity<ApiResponse<?>> failure(ErrorMessage errorMessage) {
+    static ResponseEntity<BaseResponse<?>> failure(ErrorMessage errorMessage) {
         return ResponseEntity.status(errorMessage.getHttpStatus())
-                .body(ApiResponse.of(errorMessage));
+                .body(BaseResponse.of(errorMessage));
     }
 }

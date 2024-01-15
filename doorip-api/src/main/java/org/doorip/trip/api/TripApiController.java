@@ -2,7 +2,7 @@ package org.doorip.trip.api;
 
 import lombok.RequiredArgsConstructor;
 import org.doorip.auth.UserId;
-import org.doorip.common.ApiResponse;
+import org.doorip.common.BaseResponse;
 import org.doorip.common.ApiResponseUtil;
 import org.doorip.message.SuccessMessage;
 import org.doorip.trip.dto.request.TripCreateRequest;
@@ -23,50 +23,50 @@ public class TripApiController {
     private final TripDetailService tripDetailService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<?>> createTrip(@UserId final Long userId,
-                                                     @RequestBody final TripCreateRequest request) {
+    public ResponseEntity<BaseResponse<?>> createTrip(@UserId final Long userId,
+                                                      @RequestBody final TripCreateRequest request) {
         final TripCreateResponse response = tripService.createTripAndParticipant(userId, request);
         return ApiResponseUtil.success(SuccessMessage.CREATED, response);
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<?>> getTrips(@UserId final Long userId,
-                                                   @RequestParam final String progress) {
+    public ResponseEntity<BaseResponse<?>> getTrips(@UserId final Long userId,
+                                                    @RequestParam final String progress) {
         final TripGetResponse response = tripService.getTrips(userId, progress);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<ApiResponse<?>> verifyCode(@RequestBody TripVerifyRequest request) {
+    public ResponseEntity<BaseResponse<?>> verifyCode(@RequestBody TripVerifyRequest request) {
         final TripResponse response = tripService.verifyCode(request);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
     @PostMapping("/{tripId}/entry")
-    public ResponseEntity<ApiResponse<?>> entryTrip(@PathVariable final Long tripId,
-                                                    @UserId final Long userId,
-                                                    @RequestBody final TripEntryRequest request) {
+    public ResponseEntity<BaseResponse<?>> entryTrip(@PathVariable final Long tripId,
+                                                     @UserId final Long userId,
+                                                     @RequestBody final TripEntryRequest request) {
         final TripEntryResponse response = tripService.entryTrip(userId, tripId, request);
         return ApiResponseUtil.success(SuccessMessage.CREATED, response);
     }
 
     @GetMapping("/{tripId}/my")
-    public ResponseEntity<ApiResponse<?>> getMyTodoDetail(@UserId final Long userId,
-                                                          @PathVariable final Long tripId) {
+    public ResponseEntity<BaseResponse<?>> getMyTodoDetail(@UserId final Long userId,
+                                                           @PathVariable final Long tripId) {
         final MyTodoResponse response = tripDetailService.getMyTodoDetail(userId, tripId);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
     @GetMapping("/{tripId}/our")
-    public ResponseEntity<ApiResponse<?>> getOurTodoDetail(@UserId final Long userId,
-                                                           @PathVariable final Long tripId) {
+    public ResponseEntity<BaseResponse<?>> getOurTodoDetail(@UserId final Long userId,
+                                                            @PathVariable final Long tripId) {
         final OurTodoResponse response = tripDetailService.getOurTodoDetail(userId, tripId);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
     @GetMapping("/{tripId}/participants")
-    public ResponseEntity<ApiResponse<?>> getParticipants(@UserId final Long userId,
-                                                          @PathVariable final Long tripId) {
+    public ResponseEntity<BaseResponse<?>> getParticipants(@UserId final Long userId,
+                                                           @PathVariable final Long tripId) {
         final TripParticipantGetResponse response = tripDetailService.getParticipants(userId, tripId);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
