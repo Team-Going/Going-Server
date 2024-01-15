@@ -18,10 +18,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/trips")
 @Controller
-public class TripApiController {
+public class TripApiController implements TripApi {
     private final TripService tripService;
     private final TripDetailService tripDetailService;
 
+    @Override
     @PostMapping
     public ResponseEntity<BaseResponse<?>> createTrip(@UserId final Long userId,
                                                       @RequestBody final TripCreateRequest request) {
@@ -29,6 +30,7 @@ public class TripApiController {
         return ApiResponseUtil.success(SuccessMessage.CREATED, response);
     }
 
+    @Override
     @GetMapping
     public ResponseEntity<BaseResponse<?>> getTrips(@UserId final Long userId,
                                                     @RequestParam final String progress) {
@@ -36,12 +38,14 @@ public class TripApiController {
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
+    @Override
     @PostMapping("/verify")
     public ResponseEntity<BaseResponse<?>> verifyCode(@RequestBody TripVerifyRequest request) {
         final TripResponse response = tripService.verifyCode(request);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
+    @Override
     @PostMapping("/{tripId}/entry")
     public ResponseEntity<BaseResponse<?>> entryTrip(@PathVariable final Long tripId,
                                                      @UserId final Long userId,
@@ -50,6 +54,7 @@ public class TripApiController {
         return ApiResponseUtil.success(SuccessMessage.CREATED, response);
     }
 
+    @Override
     @GetMapping("/{tripId}/my")
     public ResponseEntity<BaseResponse<?>> getMyTodoDetail(@UserId final Long userId,
                                                            @PathVariable final Long tripId) {
@@ -57,6 +62,7 @@ public class TripApiController {
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
+    @Override
     @GetMapping("/{tripId}/our")
     public ResponseEntity<BaseResponse<?>> getOurTodoDetail(@UserId final Long userId,
                                                             @PathVariable final Long tripId) {
@@ -64,6 +70,7 @@ public class TripApiController {
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
+    @Override
     @GetMapping("/{tripId}/participants")
     public ResponseEntity<BaseResponse<?>> getParticipants(@UserId final Long userId,
                                                            @PathVariable final Long tripId) {
