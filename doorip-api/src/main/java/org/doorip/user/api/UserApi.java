@@ -112,7 +112,7 @@ public interface UserApi {
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
     ResponseEntity<BaseResponse<?>> signIn(@RequestHeader(AUTHORIZATION) final String token,
-                                                  @RequestBody final UserSignInRequest request);
+                                           @RequestBody final UserSignInRequest request);
 
     @Operation(
             summary = "회원가입 API",
@@ -165,7 +165,7 @@ public interface UserApi {
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
     ResponseEntity<BaseResponse<?>> signUp(@RequestHeader(AUTHORIZATION) final String token,
-                                                  @RequestBody final UserSignUpRequest request);
+                                           @RequestBody final UserSignUpRequest request);
 
     @Operation(
             security = @SecurityRequirement(name = "Authorization"),
@@ -278,7 +278,7 @@ public interface UserApi {
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
     ResponseEntity<BaseResponse<?>> reissue(@RequestHeader(AUTHORIZATION) final String refreshtoken,
-                                                   @RequestBody final UserReissueRequest request);
+                                            @RequestBody final UserReissueRequest request);
 
     @Operation(
             security = @SecurityRequirement(name = "Authorization"),

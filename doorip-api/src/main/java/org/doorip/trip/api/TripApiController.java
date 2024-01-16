@@ -1,6 +1,5 @@
 package org.doorip.trip.api;
 
-import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.doorip.auth.UserId;
 import org.doorip.common.BaseResponse;
@@ -34,7 +33,6 @@ public class TripApiController implements TripApi {
     @GetMapping
     @Override
     public ResponseEntity<BaseResponse<?>> getTrips(@UserId final Long userId,
-                                                    @Parameter(name = "progress", description = "complete/incomplete")
                                                     @RequestParam final String progress) {
         final TripGetResponse response = tripService.getTrips(userId, progress);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
@@ -42,7 +40,7 @@ public class TripApiController implements TripApi {
 
     @PostMapping("/verify")
     @Override
-    public ResponseEntity<BaseResponse<?>> verifyCode(@RequestBody TripVerifyRequest request) {
+    public ResponseEntity<BaseResponse<?>> verifyCode(@RequestBody final TripVerifyRequest request) {
         final TripResponse response = tripService.verifyCode(request);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }

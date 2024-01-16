@@ -101,7 +101,7 @@ public interface TripApi {
                             content = @Content)})
     ResponseEntity<BaseResponse<?>> getTrips(@Parameter(hidden = true)
                                              @UserId final Long userId,
-                                             @Parameter(name = "progress", description = "complete/ incomplete")
+                                             @Parameter(name = "progress", description = "complete/incomplete")
                                              @RequestParam final String progress);
 
     @Operation(
@@ -138,7 +138,7 @@ public interface TripApi {
                             responseCode = "500",
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
-    ResponseEntity<BaseResponse<?>> verifyCode(@RequestBody TripVerifyRequest request);
+    ResponseEntity<BaseResponse<?>> verifyCode(@RequestBody final TripVerifyRequest request);
 
     @Operation(
             summary = "여행 입장 API",
