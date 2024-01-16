@@ -40,7 +40,7 @@
 
 <div align=center>
   
-<img width="943" src="https://github.com/Team-Going/Going-Server/assets/81796317/110fbd69-eb78-449e-b386-ccb0eda6362e">
+<img width="943" src="https://github.com/Team-Going/Going-Server/assets/81796317/81958e17-58bf-4a3e-a43f-7a6abea968d5">
 
 </div>
 
