@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  redis:
+    container_name: redis
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+  blue:
+    container_name: blue
+    image: goinggoing/server
+    expose:
+      - 8080
+    ports:
+      - "8081:8080"
+    environment:
+      - TZ=Asia/Seoul
+    depends_on:
+      - redis
+  green:
+    container_name: green
+    image: goinggoing/server
+    expose:
+      - 8080
+    ports:
+      - "8082:8080"
+    environment:
+      - TZ=Asia/Seoul
+    depends_on:
+      - redis

@@ -1,0 +1,5 @@
+rootProject.name = 'doorip'
+include 'doorip-api'
+include 'doorip-domain'
+include 'doorip-common'
+include 'doorip-external'

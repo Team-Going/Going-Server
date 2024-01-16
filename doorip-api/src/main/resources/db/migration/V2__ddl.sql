@@ -1,0 +1,12 @@
+alter table participant drop foreign key participant_ibfk_1;
+drop index user_id on participant;
+alter table participant add constraint participant_ibfk_1 foreign key (user_id) references users (user_id);
+alter table participant drop foreign key participant_ibfk_2;
+drop index trip_id on participant;
+alter table participant add constraint participant_ibfk_2 foreign key (trip_id) references trip (trip_id);
+alter table todo drop foreign key todo_ibfk_1;
+drop index trip_id on todo;
+alter table todo add constraint todo_ibfk_1 foreign key (trip_id) references trip (trip_id);
+alter table allocator drop foreign key allocator_ibfk_2;
+drop index todo_id on allocator;
+alter table allocator add constraint allocator_ibfk_2 foreign key (todo_id) references todo (todo_id);

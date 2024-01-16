@@ -1,0 +1,33 @@
+name: Development Server CI
+
+on:
+  pull_request:
+    branches: [ "develop" ]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ✔️ checkout
+        uses: actions/checkout@v3
+
+      - name: ✔️ set JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
+      - name: ✔️ create application.yml
+        run: |
+          cd ./doorip-api/src/main/resources
+          touch ./application.yml
+          echo "$APPLICATION_DEV" > ./application.yml
+        env:
+          APPLICATION_DEV: ${{ secrets.APPLICATION_DEV }}
+
+      - name: ✔️ give executive authority to gradlew
+        run: chmod +x gradlew
+
+      - name: ✔️ build gradlew
+        run: ./gradlew doorip-api:build -x test
