@@ -37,7 +37,7 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
             "order by d.endDate")
     List<Todo> findMyTodoByTripId(@Param("tripId") Long tripId, @Param("userId") Long userId, @Param("progress") Progress progress);
 
-    int countTodoByTripIdAndProgress(Long tripId, Progress progress);
+    int countTodoByTripIdAndSecretAndProgress(Long tripId, Secret secret, Progress progress);
 
     @Query("select count(*) " +
             "from Todo d " +

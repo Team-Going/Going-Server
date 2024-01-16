@@ -5,6 +5,7 @@ import org.doorip.exception.EntityNotFoundException;
 import org.doorip.message.ErrorMessage;
 import org.doorip.trip.domain.Participant;
 import org.doorip.trip.domain.Progress;
+import org.doorip.trip.domain.Secret;
 import org.doorip.trip.domain.Trip;
 import org.doorip.trip.dto.response.MyTodoResponse;
 import org.doorip.trip.dto.response.OurTodoResponse;
@@ -89,8 +90,8 @@ public class TripDetailService {
     }
 
     private int calculateTodoProgressRate(Long tripId) {
-        int incompleteTodoCount = todoRepository.countTodoByTripIdAndProgress(tripId, Progress.INCOMPLETE);
-        int completeTodoCount = todoRepository.countTodoByTripIdAndProgress(tripId, Progress.COMPLETE);
+        int incompleteTodoCount = todoRepository.countTodoByTripIdAndSecretAndProgress(tripId, Secret.OUR, Progress.INCOMPLETE);
+        int completeTodoCount = todoRepository.countTodoByTripIdAndSecretAndProgress(tripId, Secret.OUR, Progress.COMPLETE);
         int totalTodoCount = incompleteTodoCount + completeTodoCount;
         return round(((float) completeTodoCount / totalTodoCount) * 100);
     }
