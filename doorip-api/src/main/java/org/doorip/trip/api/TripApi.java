@@ -105,7 +105,7 @@ public interface TripApi {
                                              @RequestParam final String progress);
 
     @Operation(
-            summary = "초대 코드 검증 API",
+            summary = "초대코드 검증 API",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -113,6 +113,10 @@ public interface TripApi {
                     @ApiResponse(
                             responseCode = "400",
                             description = "잘못된 요청입니다.",
+                            content = @Content),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "여행에 입장할 수 있는 최대 인원은 6명입니다.",
                             content = @Content),
                     @ApiResponse(
                             responseCode = "401",
