@@ -16,8 +16,8 @@ public enum ErrorMessage {
     INVALID_REQUEST_PARAMETER_VALUE(HttpStatus.BAD_REQUEST, "e4002", "유효하지 않은 요청 파라미터 값입니다."),
     INVALID_ALLOCATOR_COUNT(HttpStatus.BAD_REQUEST, "e4003", "여행 TODO를 생성하기 위해 최소 1명 이상의 배정자가 필요합니다."),
     INVALID_DATE_TYPE(HttpStatus.BAD_REQUEST, "e4004", "유효하지 않은 날짜 타입입니다."),
-    INVALID_RESULT_TYPE(HttpStatus.BAD_REQUEST, "e4004", "유효하지 않은 성향 입력 값입니다."),
-    INVALID_PARTICIPANT_COUNT(HttpStatus.BAD_REQUEST, "e4005", "여행에 입장할 수 있는 최대 인원은 6명입니다."),
+    INVALID_RESULT_TYPE(HttpStatus.BAD_REQUEST, "e4005", "유효하지 않은 성향 입력 값입니다."),
+    INVALID_PARTICIPANT_COUNT(HttpStatus.BAD_REQUEST, "e4006", "여행에 입장할 수 있는 최대 인원은 6명입니다."),
 
     /**
      * 401 Unauthorized
