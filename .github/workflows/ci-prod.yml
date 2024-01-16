@@ -24,7 +24,7 @@ jobs:
           touch ./application.yml
           echo "APPLICATION_PROD" > ./application.yml
         env:
-          APPLICATION_DEV: ${{ secrets.APPLICATION_PROD }}
+          APPLICATION_PROD: ${{ secrets.APPLICATION_PROD }}
 
       - name: ✔️ give executive authority to gradlew
         run: chmod +x gradlew
