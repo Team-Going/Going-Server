@@ -43,7 +43,6 @@ public class TripService {
         Trip trip = createTrip(request, code);
         createParticipant(request, findUser, trip);
         tripRepository.save(trip);
-
         return TripCreateResponse.of(trip);
     }
 
@@ -53,7 +52,6 @@ public class TripService {
         Trip findTrip = getTrip(tripId);
         validateDuplicateParticipant(findUser, findTrip);
         createAndSaveParticipant(request, findUser, findTrip);
-
         return TripEntryResponse.of(findTrip);
     }
 
@@ -65,7 +63,15 @@ public class TripService {
 
     public TripResponse verifyCode(TripVerifyRequest request) {
         Trip trip = getTrip(request.code());
+        List<Participant> participants = trip.getParticipants();
+        validateParticipantCount(participants);
         return TripResponse.of(trip);
+    }
+
+    private void validateParticipantCount(List<Participant> participants) {
+        if (participants.size() == Constants.MAX_PARTICIPANT_COUNT) {
+            throw new InvalidValueException(ErrorMessage.INVALID_PARTICIPANT_COUNT);
+        }
     }
 
     private void validateDate(LocalDate startDate, LocalDate endDate) {
@@ -80,7 +86,6 @@ public class TripService {
             String uuid = UUID.randomUUID().toString();
             code = uuid.substring(0, 6);
         } while (isDuplicateCode(code));
-
         return code;
     }
 
