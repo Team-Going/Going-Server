@@ -25,63 +25,60 @@ import static org.doorip.common.Constants.AUTHORIZATION;
 public class UserApiController implements UserApi {
     private final UserService userService;
 
-    @Override
     @GetMapping("/splash")
+    @Override
     public ResponseEntity<BaseResponse<?>> splash(@UserId final Long userId) {
         userService.splash(userId);
         return ApiResponseUtil.success(SuccessMessage.OK);
     }
 
-    @Override
-
     @PostMapping("/signin")
+    @Override
     public ResponseEntity<BaseResponse<?>> signIn(@RequestHeader(AUTHORIZATION) final String token,
                                                   @RequestBody final UserSignInRequest request) {
         final UserSignInResponse response = userService.signIn(token, request);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
-    @Override
-
     @PostMapping("/signup")
+    @Override
     public ResponseEntity<BaseResponse<?>> signUp(@RequestHeader(AUTHORIZATION) final String token,
                                                   @RequestBody final UserSignUpRequest request) {
         final UserSignUpResponse response = userService.signUp(token, request);
         return ApiResponseUtil.success(SuccessMessage.CREATED, response);
     }
 
-    @Override
     @PatchMapping("/signout")
+    @Override
     public ResponseEntity<BaseResponse<?>> signOut(@UserId final Long userId) {
         userService.signOut(userId);
         return ApiResponseUtil.success(SuccessMessage.OK);
     }
 
-    @Override
-
     @DeleteMapping("/withdraw")
+    @Override
     public ResponseEntity<BaseResponse<?>> withdraw(@UserId final Long userId) {
         userService.withdraw(userId);
         return ApiResponseUtil.success(SuccessMessage.OK);
     }
 
-    @Override
     @PostMapping("/reissue")
+    @Override
     public ResponseEntity<BaseResponse<?>> reissue(@RequestHeader(AUTHORIZATION) final String refreshtoken,
                                                    @RequestBody final UserReissueRequest request) {
         final UserSignUpResponse response = userService.reissue(refreshtoken, request);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
-    @Override
     @GetMapping("/profile")
+    @Override
     public ResponseEntity<BaseResponse<?>> getProfile(@UserId final Long userId) {
         final ProfileGetResponse response = userService.getProfile(userId);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
-    @Override
     @PatchMapping("/test")
+    @Override
     public ResponseEntity<BaseResponse<?>> updateResult(@UserId final Long userId,
                                                         @RequestBody final ResultUpdateRequest request) {
         userService.updateResult(userId, request);

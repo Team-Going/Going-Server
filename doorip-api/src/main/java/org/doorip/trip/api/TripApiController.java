@@ -1,5 +1,6 @@
 package org.doorip.trip.api;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.doorip.auth.UserId;
 import org.doorip.common.BaseResponse;
@@ -22,31 +23,32 @@ public class TripApiController implements TripApi {
     private final TripService tripService;
     private final TripDetailService tripDetailService;
 
-    @Override
     @PostMapping
+    @Override
     public ResponseEntity<BaseResponse<?>> createTrip(@UserId final Long userId,
                                                       @RequestBody final TripCreateRequest request) {
         final TripCreateResponse response = tripService.createTripAndParticipant(userId, request);
         return ApiResponseUtil.success(SuccessMessage.CREATED, response);
     }
 
-    @Override
     @GetMapping
+    @Override
     public ResponseEntity<BaseResponse<?>> getTrips(@UserId final Long userId,
+                                                    @Parameter(name = "progress", description = "complete/incomplete")
                                                     @RequestParam final String progress) {
         final TripGetResponse response = tripService.getTrips(userId, progress);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
-    @Override
     @PostMapping("/verify")
+    @Override
     public ResponseEntity<BaseResponse<?>> verifyCode(@RequestBody TripVerifyRequest request) {
         final TripResponse response = tripService.verifyCode(request);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
-    @Override
     @PostMapping("/{tripId}/entry")
+    @Override
     public ResponseEntity<BaseResponse<?>> entryTrip(@PathVariable final Long tripId,
                                                      @UserId final Long userId,
                                                      @RequestBody final TripEntryRequest request) {
@@ -54,24 +56,24 @@ public class TripApiController implements TripApi {
         return ApiResponseUtil.success(SuccessMessage.CREATED, response);
     }
 
-    @Override
     @GetMapping("/{tripId}/my")
+    @Override
     public ResponseEntity<BaseResponse<?>> getMyTodoDetail(@UserId final Long userId,
                                                            @PathVariable final Long tripId) {
         final MyTodoResponse response = tripDetailService.getMyTodoDetail(userId, tripId);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
-    @Override
     @GetMapping("/{tripId}/our")
+    @Override
     public ResponseEntity<BaseResponse<?>> getOurTodoDetail(@UserId final Long userId,
                                                             @PathVariable final Long tripId) {
         final OurTodoResponse response = tripDetailService.getOurTodoDetail(userId, tripId);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
-    @Override
     @GetMapping("/{tripId}/participants")
+    @Override
     public ResponseEntity<BaseResponse<?>> getParticipants(@UserId final Long userId,
                                                            @PathVariable final Long tripId) {
         final TripParticipantGetResponse response = tripDetailService.getParticipants(userId, tripId);

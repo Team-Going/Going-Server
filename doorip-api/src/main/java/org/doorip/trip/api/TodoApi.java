@@ -102,6 +102,7 @@ public interface TodoApi {
                                                  @UserId final Long userId,
                                                  @PathVariable final Long tripId,
                                                  @RequestParam final String category,
+                                                 @Parameter(name = "progress", description = "complete/incomplete")
                                                  @RequestParam final String progress);
 
     @Operation(

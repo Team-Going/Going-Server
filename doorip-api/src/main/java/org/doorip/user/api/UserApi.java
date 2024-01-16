@@ -20,7 +20,6 @@ import static org.doorip.common.Constants.AUTHORIZATION;
 
 @Tag(name = "회원 관련 API")
 public interface UserApi {
-
     @Operation(
             summary = "스플래쉬 분기 처리 API",
             responses = {
@@ -169,6 +168,7 @@ public interface UserApi {
                                                   @RequestBody final UserSignUpRequest request);
 
     @Operation(
+            security = @SecurityRequirement(name = "Authorization"),
             summary = "로그아웃 API",
             responses = {
                     @ApiResponse(
@@ -202,11 +202,11 @@ public interface UserApi {
                             responseCode = "500",
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
-    @SecurityRequirement(name = "Authorization")
     ResponseEntity<BaseResponse<?>> signOut(@Parameter(hidden = true)
                                             @UserId final Long userId);
 
     @Operation(
+            security = @SecurityRequirement(name = "Authorization"),
             summary = "회원 탈퇴 API",
             responses = {
                     @ApiResponse(
@@ -236,7 +236,6 @@ public interface UserApi {
                             responseCode = "500",
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
-    @SecurityRequirement(name = "Authorization")
     ResponseEntity<BaseResponse<?>> withdraw(@Parameter(hidden = true)
                                              @UserId final Long userId);
 
@@ -282,6 +281,7 @@ public interface UserApi {
                                                    @RequestBody final UserReissueRequest request);
 
     @Operation(
+            security = @SecurityRequirement(name = "Authorization"),
             summary = "프로필 조회 API",
             responses = {
                     @ApiResponse(
@@ -311,11 +311,11 @@ public interface UserApi {
                             responseCode = "500",
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
-    @SecurityRequirement(name = "Authorization")
     ResponseEntity<BaseResponse<?>> getProfile(@Parameter(hidden = true)
                                                @UserId final Long userId);
 
     @Operation(
+            security = @SecurityRequirement(name = "Authorization"),
             summary = "프로필 성향 테스트 API",
             responses = {
                     @ApiResponse(
@@ -357,7 +357,6 @@ public interface UserApi {
                             responseCode = "500",
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
-    @SecurityRequirement(name = "Authorization")
     ResponseEntity<BaseResponse<?>> updateResult(@Parameter(hidden = true)
                                                  @UserId final Long userId,
                                                  @RequestBody final ResultUpdateRequest request);

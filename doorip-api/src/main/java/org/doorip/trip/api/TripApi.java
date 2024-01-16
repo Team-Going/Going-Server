@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Tag(name = "여행 관련 API")
 @SecurityRequirement(name = "Authorization")
 public interface TripApi {
-
     @Operation(
             summary = "여행 생성 API",
             responses = {
@@ -102,6 +101,7 @@ public interface TripApi {
                             content = @Content)})
     ResponseEntity<BaseResponse<?>> getTrips(@Parameter(hidden = true)
                                              @UserId final Long userId,
+                                             @Parameter(name = "progress", description = "complete/ incomplete")
                                              @RequestParam final String progress);
 
     @Operation(
