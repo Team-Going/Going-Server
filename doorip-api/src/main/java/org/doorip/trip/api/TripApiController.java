@@ -18,11 +18,12 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/trips")
 @Controller
-public class TripApiController {
+public class TripApiController implements TripApi {
     private final TripService tripService;
     private final TripDetailService tripDetailService;
 
     @PostMapping
+    @Override
     public ResponseEntity<BaseResponse<?>> createTrip(@UserId final Long userId,
                                                       @RequestBody final TripCreateRequest request) {
         final TripCreateResponse response = tripService.createTripAndParticipant(userId, request);
@@ -30,6 +31,7 @@ public class TripApiController {
     }
 
     @GetMapping
+    @Override
     public ResponseEntity<BaseResponse<?>> getTrips(@UserId final Long userId,
                                                     @RequestParam final String progress) {
         final TripGetResponse response = tripService.getTrips(userId, progress);
@@ -37,12 +39,14 @@ public class TripApiController {
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<BaseResponse<?>> verifyCode(@RequestBody TripVerifyRequest request) {
+    @Override
+    public ResponseEntity<BaseResponse<?>> verifyCode(@RequestBody final TripVerifyRequest request) {
         final TripResponse response = tripService.verifyCode(request);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
     @PostMapping("/{tripId}/entry")
+    @Override
     public ResponseEntity<BaseResponse<?>> entryTrip(@PathVariable final Long tripId,
                                                      @UserId final Long userId,
                                                      @RequestBody final TripEntryRequest request) {
@@ -51,6 +55,7 @@ public class TripApiController {
     }
 
     @GetMapping("/{tripId}/my")
+    @Override
     public ResponseEntity<BaseResponse<?>> getMyTodoDetail(@UserId final Long userId,
                                                            @PathVariable final Long tripId) {
         final MyTodoResponse response = tripDetailService.getMyTodoDetail(userId, tripId);
@@ -58,6 +63,7 @@ public class TripApiController {
     }
 
     @GetMapping("/{tripId}/our")
+    @Override
     public ResponseEntity<BaseResponse<?>> getOurTodoDetail(@UserId final Long userId,
                                                             @PathVariable final Long tripId) {
         final OurTodoResponse response = tripDetailService.getOurTodoDetail(userId, tripId);
@@ -65,6 +71,7 @@ public class TripApiController {
     }
 
     @GetMapping("/{tripId}/participants")
+    @Override
     public ResponseEntity<BaseResponse<?>> getParticipants(@UserId final Long userId,
                                                            @PathVariable final Long tripId) {
         final TripParticipantGetResponse response = tripDetailService.getParticipants(userId, tripId);
