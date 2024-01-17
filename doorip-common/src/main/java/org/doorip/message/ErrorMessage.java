@@ -64,7 +64,7 @@ public enum ErrorMessage {
      */
     CONFLICT(HttpStatus.CONFLICT, "e4090", "이미 존재하는 리소스입니다."),
     DUPLICATE_USER(HttpStatus.CONFLICT, "e4091", "이미 존재하는 회원입니다."),
-    DUPLICATE_PARTICIPANT(HttpStatus.CONFLICT, "e4092", "이미 존재하는 참가자입니다."),
+    DUPLICATE_PARTICIPANT(HttpStatus.CONFLICT, "e4092", "이미 존재하는 참여자입니다."),
 
     /**
      * 500 Internal Server Error

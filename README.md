@@ -40,7 +40,7 @@
 
 <div align=center>
   
-<img width="943" src="https://github.com/Team-Going/Going-Server/assets/81796317/110fbd69-eb78-449e-b386-ccb0eda6362e">
+<img width="943" src="https://github.com/Team-Going/Going-Server/assets/81796317/81958e17-58bf-4a3e-a43f-7a6abea968d5">
 
 </div>
 
@@ -50,7 +50,7 @@
 
 <div align=center>
   
-<img width="750" src="https://github.com/Team-Going/Going-Server/assets/81796317/334584ec-d2cc-4df1-b91e-96082a897242">
+<img width="750" src="https://github.com/Team-Going/Going-Server/assets/81796317/6e7c28e0-02ca-4731-9c56-5d60c5df0478">
 
 </div>
 
