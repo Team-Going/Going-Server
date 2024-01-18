@@ -130,6 +130,7 @@ public class TripDetailService {
         keys.forEach(key -> {
             int rate = round((float) propensity.get(key) / participantCount);
             boolean isLeft = rate <= MAX_STYLE_RATE - rate;
+            rate = calculatePropensityWeight(isLeft, rate);
             response.add(TripStyleResponse.of(rate, isLeft));
         });
     }
@@ -140,5 +141,12 @@ public class TripDetailService {
         propensity.put(STYLE_C, propensity.get(STYLE_C) + participant.getStyleC() * PROPENSITY_WEIGHT);
         propensity.put(STYLE_D, propensity.get(STYLE_D) + participant.getStyleD() * PROPENSITY_WEIGHT);
         propensity.put(STYLE_E, propensity.get(STYLE_E) + participant.getStyleE() * PROPENSITY_WEIGHT);
+    }
+
+    private int calculatePropensityWeight(boolean isLeft, int rate) {
+        if (isLeft) {
+            rate = MAX_STYLE_RATE - rate;
+        }
+        return rate;
     }
 }
