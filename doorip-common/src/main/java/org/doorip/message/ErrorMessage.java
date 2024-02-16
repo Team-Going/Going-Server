@@ -18,6 +18,7 @@ public enum ErrorMessage {
     INVALID_DATE_TYPE(HttpStatus.BAD_REQUEST, "e4004", "유효하지 않은 날짜 타입입니다."),
     INVALID_RESULT_TYPE(HttpStatus.BAD_REQUEST, "e4005", "유효하지 않은 성향 입력 값입니다."),
     INVALID_PARTICIPANT_COUNT(HttpStatus.BAD_REQUEST, "e4006", "여행에 입장할 수 있는 최대 인원은 6명입니다."),
+    INVALID_DISCORD_MESSAGE(HttpStatus.BAD_REQUEST, "e4007", "디스코드 메시지 전달에 실패했습니다."),
 
     /**
      * 401 Unauthorized
