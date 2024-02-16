@@ -9,7 +9,9 @@ import org.doorip.exception.EntityNotFoundException;
 import org.doorip.exception.InvalidValueException;
 import org.doorip.exception.UnauthorizedException;
 import org.doorip.message.ErrorMessage;
+import org.doorip.message.EventMessage;
 import org.doorip.openfeign.apple.AppleOAuthProvider;
+import org.doorip.openfeign.discord.DiscordMessageProvider;
 import org.doorip.openfeign.kakao.KakaoOAuthProvider;
 import org.doorip.user.domain.*;
 import org.doorip.user.dto.request.ResultUpdateRequest;
@@ -43,6 +45,7 @@ public class UserService {
     private final JwtValidator jwtValidator;
     private final AppleOAuthProvider appleOAuthProvider;
     private final KakaoOAuthProvider kakaoOAuthProvider;
+    private final DiscordMessageProvider discordMessageProvider;
 
     @Transactional(readOnly = true)
     public void splash(Long userId) {
@@ -67,6 +70,7 @@ public class UserService {
         User savedUser = saveUser(request, platformId, enumPlatform);
         Token issueToken = jwtProvider.issueToken(savedUser.getId());
         updateRefreshToken(issueToken.refreshToken(), savedUser);
+        discordMessageProvider.sendMessage(EventMessage.SIGN_UP_EVENT);
         return UserSignUpResponse.of(issueToken, savedUser.getId());
     }
 
@@ -102,7 +106,6 @@ public class UserService {
         String stringResult = oneTypeResult(mappedIndex.subList(0, 3), "S", "A")
                 + oneTypeResult(mappedIndex.subList(3, 6), "R", "E")
                 + oneTypeResult(mappedIndex.subList(6, 9), "P", "I");
-
         Result result = getEnumResultFromStringResult(stringResult);
         findUser.updateResult(result);
     }
