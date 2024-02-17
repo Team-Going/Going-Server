@@ -1,11 +1,16 @@
-#  Doorip ✈️
-> ## 서로를 이해하며 완성해가는 우리의 여행 To-do, Doorip
->
-> 여행자 10명 중 6명은 여행을 같이 간 사람과 갈등을 겪고, 다음 여행에서는 누군가와 함께 하는 여행 자체를 망설이게 됩니다. 
-> 고잉고잉은 이 문제를 해결할, 쉽고 재밌는 솔루션을 만드는 팀입니다. 
->
-> Doorip에서 여행에서 공동 할일 관리에 대한 불편과 부담을 내려놓고 좋아하는 사람들과 여행을 오롯이 즐기세요.
-> 여행 중에 생기는 모든 할 일을 함께 관리하세요. 두립의 여행 취향 테스트와 프로필 기능으로 서로를 이해할 수 있어요.
+#  doorip ✈️
+
+![0](https://github.com/Team-Going/Going-Server/assets/81796317/6267da22-73c2-4f76-b05d-d2641663dcf0)
+
+![1](https://github.com/Team-Going/Going-Server/assets/81796317/bcd86483-16f6-43ae-85a6-996cf3c12991)
+
+![2](https://github.com/Team-Going/Going-Server/assets/81796317/c120c80c-ecd1-4c3b-b339-6c8b73bbb011)
+
+![3](https://github.com/Team-Going/Going-Server/assets/81796317/31e28d6c-d46f-4b94-a932-ff1190d8d57a)
+
+![4](https://github.com/Team-Going/Going-Server/assets/81796317/286bcf64-e821-48a2-bb58-ed791b060278)
+
+![5](https://github.com/Team-Going/Going-Server/assets/81796317/3e34400a-02b9-43ed-9582-3a84f438e9e7)
 
 <br>
 
