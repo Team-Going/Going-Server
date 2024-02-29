@@ -2,8 +2,8 @@ package org.doorip.trip.api;
 
 import lombok.RequiredArgsConstructor;
 import org.doorip.auth.UserId;
-import org.doorip.common.BaseResponse;
 import org.doorip.common.ApiResponseUtil;
+import org.doorip.common.BaseResponse;
 import org.doorip.message.SuccessMessage;
 import org.doorip.trip.dto.request.TripCreateRequest;
 import org.doorip.trip.dto.request.TripEntryRequest;
@@ -76,5 +76,12 @@ public class TripApiController implements TripApi {
                                                            @PathVariable final Long tripId) {
         final TripParticipantGetResponse response = tripDetailService.getParticipants(userId, tripId);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
+    }
+
+    @PatchMapping("/{tripId}")
+    public ResponseEntity<BaseResponse<?>> leaveTrip(@UserId final Long userId,
+                                                     @PathVariable final Long tripId) {
+        tripDetailService.leaveTrip(userId, tripId);
+        return ApiResponseUtil.success(SuccessMessage.OK);
     }
 }
