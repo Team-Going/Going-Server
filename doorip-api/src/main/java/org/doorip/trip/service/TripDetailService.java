@@ -1,19 +1,19 @@
 package org.doorip.trip.service;
 
 import lombok.RequiredArgsConstructor;
+import org.doorip.common.Constants;
 import org.doorip.exception.EntityNotFoundException;
 import org.doorip.message.ErrorMessage;
-import org.doorip.trip.domain.Participant;
-import org.doorip.trip.domain.Progress;
-import org.doorip.trip.domain.Secret;
-import org.doorip.trip.domain.Trip;
+import org.doorip.trip.domain.*;
 import org.doorip.trip.dto.response.MyTodoResponse;
 import org.doorip.trip.dto.response.OurTodoResponse;
 import org.doorip.trip.dto.response.TripParticipantGetResponse;
 import org.doorip.trip.dto.response.TripStyleResponse;
+import org.doorip.trip.repository.ParticipantRepository;
 import org.doorip.trip.repository.TodoRepository;
 import org.doorip.trip.repository.TripRepository;
 import org.doorip.user.domain.User;
+import org.doorip.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,8 +28,10 @@ import static org.doorip.common.Constants.*;
 @Transactional(readOnly = true)
 @Service
 public class TripDetailService {
+    private final UserRepository userRepository;
     private final TripRepository tripRepository;
     private final TodoRepository todoRepository;
+    private final ParticipantRepository participantRepository;
 
     public MyTodoResponse getMyTodoDetail(Long userId, Long tripId) {
         Trip findTrip = getTrip(tripId);
@@ -56,6 +58,18 @@ public class TripDetailService {
         sortParticipants(participants, ownerParticipant);
         List<TripStyleResponse> response = calculateAndGetPropensityAverageRates(participants);
         return TripParticipantGetResponse.of(participants, response);
+    }
+
+    @Transactional
+    public void leaveTrip(Long userId, Long tripId) {
+        User findUser = getUser(userId);
+        Trip findTrip = getTrip(tripId);
+        int size = calculateParticipantsCount(findTrip);
+        Participant findParticipant = getParticipant(findUser, findTrip);
+        List<Todo> todos = todoRepository.findMyTodoByTripIdAndUserIdAndSecret(tripId, userId, Secret.MY);
+        todoRepository.deleteAll(todos);
+        participantRepository.delete(findParticipant);
+        deleteTripIfLastParticipant(size, findTrip);
     }
 
     private Map<String, Integer> createDefaultPropensity() {
@@ -103,6 +117,26 @@ public class TripDetailService {
         List<TripStyleResponse> response = new ArrayList<>();
         calculateAndSetPropensityAverageRate(keys, propensity, participantCount, response);
         return response;
+    }
+
+    private User getUser(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND));
+    }
+
+    private int calculateParticipantsCount(Trip findTrip) {
+        return findTrip.getParticipants().size();
+    }
+
+    private Participant getParticipant(User findUser, Trip findTrip) {
+        return participantRepository.findByUserAndTrip(findUser, findTrip)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.PARTICIPANT_NOT_FOUND));
+    }
+
+    private void deleteTripIfLastParticipant(int size, Trip trip) {
+        if (size == Constants.MIN_PARTICIPANT_COUNT) {
+            tripRepository.delete(trip);
+        }
     }
 
     private Trip getTrip(Long tripId) {
