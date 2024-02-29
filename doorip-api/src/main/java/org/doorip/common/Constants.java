@@ -17,4 +17,5 @@ public abstract class Constants {
     public static final int MAX_STYLE_RATE = 100;
     public static final int PROPENSITY_WEIGHT = 25;
     public static final int MAX_PARTICIPANT_COUNT = 6;
+    public static final int MIN_PARTICIPANT_COUNT = 1;
 }
