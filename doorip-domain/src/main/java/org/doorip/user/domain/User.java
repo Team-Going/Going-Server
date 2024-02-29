@@ -52,12 +52,4 @@ public class User extends BaseTimeEntity {
     public void updateResult(Result result) {
         this.result = result;
     }
-
-    public void updateName(String name) {
-        this.name = name;
-    }
-
-    public void updateIntro(String intro) {
-        this.intro = intro;
-    }
 }
