@@ -9,6 +9,7 @@ import org.doorip.user.dto.request.ResultUpdateRequest;
 import org.doorip.user.dto.request.UserReissueRequest;
 import org.doorip.user.dto.request.UserSignInRequest;
 import org.doorip.user.dto.request.UserSignUpRequest;
+import org.doorip.user.dto.request.ProfileUpdateRequest;
 import org.doorip.user.dto.response.ProfileGetResponse;
 import org.doorip.user.dto.response.UserSignUpResponse;
 import org.doorip.user.dto.response.UserSignInResponse;
@@ -82,6 +83,13 @@ public class UserApiController implements UserApi {
     public ResponseEntity<BaseResponse<?>> updateResult(@UserId final Long userId,
                                                         @RequestBody final ResultUpdateRequest request) {
         userService.updateResult(userId, request);
+        return ApiResponseUtil.success(SuccessMessage.OK);
+    }
+
+    @PatchMapping("/profile")
+    public ResponseEntity<BaseResponse<?>> updateProfile(@UserId final Long userId,
+                                                         @RequestBody final ProfileUpdateRequest request) {
+        userService.updateProfile(userId, request);
         return ApiResponseUtil.success(SuccessMessage.OK);
     }
 }
