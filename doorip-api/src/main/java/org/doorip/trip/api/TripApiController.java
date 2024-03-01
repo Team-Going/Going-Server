@@ -79,7 +79,7 @@ public class TripApiController implements TripApi {
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
-    @PatchMapping("/{tripId}")
+    @PatchMapping("/{tripId}/leave")
     public ResponseEntity<BaseResponse<?>> leaveTrip(@UserId final Long userId,
                                                      @PathVariable final Long tripId) {
         tripDetailService.leaveTrip(userId, tripId);
