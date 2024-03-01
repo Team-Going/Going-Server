@@ -2,8 +2,8 @@ package org.doorip.trip.api;
 
 import lombok.RequiredArgsConstructor;
 import org.doorip.auth.UserId;
-import org.doorip.common.BaseResponse;
 import org.doorip.common.ApiResponseUtil;
+import org.doorip.common.BaseResponse;
 import org.doorip.message.SuccessMessage;
 import org.doorip.trip.dto.request.TripCreateRequest;
 import org.doorip.trip.dto.request.TripEntryRequest;
@@ -88,8 +88,8 @@ public class TripApiController implements TripApi {
 
     @PatchMapping("/{tripId}")
     public ResponseEntity<BaseResponse<?>> updateTrip(@PathVariable final Long tripId,
-                                                     @UserId final Long userId,
-                                                     @RequestBody final TripUpdateRequest request) {
+                                                      @UserId final Long userId,
+                                                      @RequestBody final TripUpdateRequest request) {
         tripService.updateTrip(userId, tripId, request);
         return ApiResponseUtil.success(SuccessMessage.OK);
     }
