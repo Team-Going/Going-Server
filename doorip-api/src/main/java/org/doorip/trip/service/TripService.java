@@ -11,6 +11,7 @@ import org.doorip.trip.domain.Role;
 import org.doorip.trip.domain.Trip;
 import org.doorip.trip.dto.request.TripCreateRequest;
 import org.doorip.trip.dto.request.TripEntryRequest;
+import org.doorip.trip.dto.request.TripUpdateRequest;
 import org.doorip.trip.dto.request.TripVerifyRequest;
 import org.doorip.trip.dto.response.TripCreateResponse;
 import org.doorip.trip.dto.response.TripEntryResponse;
@@ -65,6 +66,15 @@ public class TripService {
     public TripResponse verifyCode(TripVerifyRequest request) {
         Trip trip = getTrip(request.code());
         return TripResponse.of(trip);
+    }
+
+    @Transactional
+    public void updateTrip(Long userId, Long tripId, TripUpdateRequest request) {
+        User findUser = getUser(userId);
+        Trip findTrip = getTrip(tripId);
+        validateParticipant(findUser, findTrip);
+        findTrip.updateTitle(request.title());
+        findTrip.updateDate(request.startDate(), request.endDate());
     }
 
     private void validateDate(LocalDate startDate, LocalDate endDate) {
@@ -134,5 +144,11 @@ public class TripService {
 
     private boolean isDuplicateCode(String code) {
         return tripRepository.existsByCode(code);
+    }
+
+    private void validateParticipant(User user, Trip trip) {
+        if (!participantRepository.existsByUserAndTrip(user, trip)) {
+            throw new ConflictException(ErrorMessage.PARTICIPANT_NOT_FOUND);
+        }
     }
 }

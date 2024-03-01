@@ -57,4 +57,13 @@ public class Trip extends BaseTimeEntity {
     public void removeTodo(Todo todo) {
         todos.remove(todo);
     }
+
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
+    public void updateDate(LocalDate startDate, LocalDate endDate) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 }
