@@ -118,18 +118,18 @@ public class TodoService {
 
     private List<Todo> getOurTodosAccordingToProgress(Long tripId, String progress) {
         if (progress.equals(Constants.INCOMPLETE)) {
-            return todoRepository.findOurTodoByTripId(tripId, Secret.OUR, Progress.INCOMPLETE);
+            return todoRepository.findOurTodoByTripIdAndSecretAndProgress(tripId, Secret.OUR, Progress.INCOMPLETE);
         } else if (progress.equals(Constants.COMPLETE)) {
-            return todoRepository.findOurTodoByTripId(tripId, Secret.OUR, Progress.COMPLETE);
+            return todoRepository.findOurTodoByTripIdAndSecretAndProgress(tripId, Secret.OUR, Progress.COMPLETE);
         }
         throw new InvalidValueException(ErrorMessage.INVALID_REQUEST_PARAMETER_VALUE);
     }
 
     private List<Todo> getMyTodosAccordingToProgress(Long userId, Long tripId, String progress) {
         if (progress.equals(Constants.INCOMPLETE)) {
-            return todoRepository.findMyTodoByTripId(tripId, userId, Progress.INCOMPLETE);
+            return todoRepository.findMyTodoByTripIdAndUserIdAndProgress(tripId, userId, Progress.INCOMPLETE);
         } else if (progress.equals(Constants.COMPLETE)) {
-            return todoRepository.findMyTodoByTripId(tripId, userId, Progress.COMPLETE);
+            return todoRepository.findMyTodoByTripIdAndUserIdAndProgress(tripId, userId, Progress.COMPLETE);
         }
         throw new InvalidValueException(ErrorMessage.INVALID_REQUEST_PARAMETER_VALUE);
     }
