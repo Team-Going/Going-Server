@@ -72,4 +72,12 @@ public class Participant extends BaseTimeEntity {
     public void removeAllocator(Allocator allocator) {
         allocators.remove(allocator);
     }
+
+    public void updateStyles(int styleA, int styleB, int styleC, int styleD, int styleE) {
+        this.styleA = styleA;
+        this.styleB = styleB;
+        this.styleC = styleC;
+        this.styleD = styleD;
+        this.styleE = styleE;
+    }
 }
