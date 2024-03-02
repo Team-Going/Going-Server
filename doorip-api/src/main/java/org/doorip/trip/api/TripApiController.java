@@ -9,6 +9,7 @@ import org.doorip.trip.dto.request.TripCreateRequest;
 import org.doorip.trip.dto.request.TripEntryRequest;
 import org.doorip.trip.dto.request.TripUpdateRequest;
 import org.doorip.trip.dto.request.TripVerifyRequest;
+import org.doorip.trip.dto.request.ParticipantUpdateRequest;
 import org.doorip.trip.dto.response.*;
 import org.doorip.trip.service.TripDetailService;
 import org.doorip.trip.service.TripService;
@@ -91,6 +92,14 @@ public class TripApiController implements TripApi {
                                                       @UserId final Long userId,
                                                       @RequestBody final TripUpdateRequest request) {
         tripService.updateTrip(userId, tripId, request);
+        return ApiResponseUtil.success(SuccessMessage.OK);
+    }
+
+    @PatchMapping("/{tripId}/participant")
+    public ResponseEntity<BaseResponse<?>> updateParticipant(@PathVariable final Long tripId,
+                                                             @UserId final Long userId,
+                                                             @RequestBody final ParticipantUpdateRequest request) {
+        tripService.updateParticipant(userId, tripId, request);
         return ApiResponseUtil.success(SuccessMessage.OK);
     }
 }
