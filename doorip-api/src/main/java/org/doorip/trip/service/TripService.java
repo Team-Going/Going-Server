@@ -13,6 +13,7 @@ import org.doorip.trip.dto.request.TripCreateRequest;
 import org.doorip.trip.dto.request.TripEntryRequest;
 import org.doorip.trip.dto.request.TripUpdateRequest;
 import org.doorip.trip.dto.request.TripVerifyRequest;
+import org.doorip.trip.dto.request.ParticipantUpdateRequest;
 import org.doorip.trip.dto.response.TripCreateResponse;
 import org.doorip.trip.dto.response.TripEntryResponse;
 import org.doorip.trip.dto.response.TripGetResponse;
@@ -75,6 +76,14 @@ public class TripService {
         validateParticipant(findUser, findTrip);
         findTrip.updateTitle(request.title());
         findTrip.updateDate(request.startDate(), request.endDate());
+    }
+
+    @Transactional
+    public void updateParticipant(Long userId, Long tripId, ParticipantUpdateRequest request) {
+        User findUser = getUser(userId);
+        Trip findTrip = getTrip(tripId);
+        Participant findParticipant = getParticipant(findUser, findTrip);
+        findParticipant.updateStyles(request.styleA(), request.styleB(), request.styleC(), request.styleD(), request.styleE());
     }
 
     private void validateDate(LocalDate startDate, LocalDate endDate) {
@@ -150,5 +159,10 @@ public class TripService {
         if (!participantRepository.existsByUserAndTrip(user, trip)) {
             throw new ConflictException(ErrorMessage.PARTICIPANT_NOT_FOUND);
         }
+    }
+
+    private Participant getParticipant(User findUser, Trip findTrip) {
+        return participantRepository.findByUserAndTrip(findUser, findTrip)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.PARTICIPANT_NOT_FOUND));
     }
 }
