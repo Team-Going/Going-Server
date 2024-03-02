@@ -5,6 +5,7 @@ import org.doorip.common.Constants;
 import org.doorip.exception.EntityNotFoundException;
 import org.doorip.message.ErrorMessage;
 import org.doorip.trip.domain.*;
+import org.doorip.trip.dto.request.ParticipantUpdateRequest;
 import org.doorip.trip.dto.response.MyTodoResponse;
 import org.doorip.trip.dto.response.OurTodoResponse;
 import org.doorip.trip.dto.response.TripParticipantGetResponse;
@@ -70,6 +71,14 @@ public class TripDetailService {
         todoRepository.deleteAll(todos);
         participantRepository.delete(findParticipant);
         deleteTripIfLastParticipant(size, findTrip);
+    }
+
+    @Transactional
+    public void updateParticipant(Long userId, Long tripId, ParticipantUpdateRequest request) {
+        User findUser = getUser(userId);
+        Trip findTrip = getTrip(tripId);
+        Participant findParticipant = getParticipant(findUser, findTrip);
+        findParticipant.updateStyles(request.styleA(), request.styleB(), request.styleC(), request.styleD(), request.styleE());
     }
 
     private Map<String, Integer> createDefaultPropensity() {

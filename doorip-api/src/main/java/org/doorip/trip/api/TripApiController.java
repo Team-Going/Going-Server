@@ -99,7 +99,7 @@ public class TripApiController implements TripApi {
     public ResponseEntity<BaseResponse<?>> updateParticipant(@PathVariable final Long tripId,
                                                              @UserId final Long userId,
                                                              @RequestBody final ParticipantUpdateRequest request) {
-        tripService.updateParticipant(userId, tripId, request);
+        tripDetailService.updateParticipant(userId, tripId, request);
         return ApiResponseUtil.success(SuccessMessage.OK);
     }
 }
