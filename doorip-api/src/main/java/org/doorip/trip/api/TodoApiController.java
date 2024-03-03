@@ -23,9 +23,10 @@ public class TodoApiController implements TodoApi {
 
     @PostMapping("/{tripId}/todos")
     @Override
-    public ResponseEntity<BaseResponse<?>> createTripTodo(@PathVariable final Long tripId,
+    public ResponseEntity<BaseResponse<?>> createTripTodo(@UserId final Long userId,
+                                                          @PathVariable final Long tripId,
                                                           @RequestBody final TodoCreateRequest request) {
-        todoService.createTripTodo(tripId, request);
+        todoService.createTripTodo(userId, tripId, request);
         return ApiResponseUtil.success(SuccessMessage.CREATED);
     }
 
