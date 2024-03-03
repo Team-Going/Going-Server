@@ -14,11 +14,11 @@ public record TodoDetailGetResponse(
         String title,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd", timezone = "Asia/Seoul")
         LocalDate endDate,
-        List<TodoAllocatorResponse> allocators,
+        List<TodoDetailAllocatorResponse> allocators,
         String memo,
         boolean secret
 ) {
-    public static TodoDetailGetResponse of(Todo todo, List<TodoAllocatorResponse> allocators) {
+    public static TodoDetailGetResponse of(Todo todo, List<TodoDetailAllocatorResponse> allocators) {
         return TodoDetailGetResponse.builder()
                 .title(todo.getTitle())
                 .endDate(todo.getEndDate())
