@@ -15,6 +15,7 @@ import org.doorip.trip.repository.ParticipantRepository;
 import org.doorip.trip.repository.TodoRepository;
 import org.doorip.trip.repository.TripRepository;
 import org.doorip.user.domain.User;
+import org.doorip.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,10 +31,11 @@ public class TodoService {
     private final TodoRepository todoRepository;
     private final TripRepository tripRepository;
     private final ParticipantRepository participantRepository;
+    private final UserRepository userRepository;
 
     @Transactional
-    public void createTripTodo(Long tripId, TodoCreateRequest request) {
-        validateAllocators(request.allocators());
+    public void createTripTodo(Long userId, Long tripId, TodoCreateRequest request) {
+        validateAllocators(request.secret(), userId, tripId, request.allocators());
         Trip findTrip = getTrip(tripId);
         Todo todo = createTodo(request, findTrip);
         createAllocators(request.allocators(), todo);
@@ -68,9 +70,11 @@ public class TodoService {
         findTodo.incomplete();
     }
 
-    private void validateAllocators(List<Long> allocators) {
-        if (allocators.isEmpty()) {
-            throw new InvalidValueException(ErrorMessage.INVALID_ALLOCATOR_COUNT);
+    private void validateAllocators(boolean isSecret, Long userId, Long tripId, List<Long> allocators) {
+        if (isSecret) {
+            validateAllocatorCount(allocators);
+            Long findOwnerParticipantId = getOwnerParticipantId(userId, tripId);
+            validateAllocatorId(findOwnerParticipantId, allocators);
         }
     }
 
@@ -103,11 +107,6 @@ public class TodoService {
         return response;
     }
 
-    private Trip getTrip(Long tripId) {
-        return tripRepository.findById(tripId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.TRIP_NOT_FOUND));
-    }
-
     private TodoDetailGetResponse getTripTodoResponse(Long userId, Trip findTrip, Todo findTodo) {
         List<TodoDetailAllocatorResponse> allocatorResponses = getAndSortAllocatorResponses(userId, findTrip, findTodo);
         return TodoDetailGetResponse.of(findTodo, allocatorResponses);
@@ -116,6 +115,25 @@ public class TodoService {
     private Todo getTodo(Long todoId) {
         return todoRepository.findById(todoId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.TODO_NOT_FOUND));
+    }
+
+    private void validateAllocatorCount(List<Long> allocators) {
+        if (allocators.size() != Constants.MIN_PARTICIPANT_COUNT) {
+            throw new InvalidValueException(ErrorMessage.INVALID_ALLOCATOR_COUNT);
+        }
+    }
+
+    private Long getOwnerParticipantId(Long userId, Long tripId) {
+        User findUser = getUser(userId);
+        Trip findTrip = getTrip(tripId);
+        Participant findOwnerParticipant = getOwnerParticipant(findUser, findTrip);
+        return findOwnerParticipant.getId();
+    }
+
+    private void validateAllocatorId(Long participantId, List<Long> allocators) {
+        if (!participantId.equals(allocators.get(Constants.TODO_OWNER_POSITION))) {
+            throw new InvalidValueException(ErrorMessage.INVALID_ALLOCATOR_ID);
+        }
     }
 
     private Participant getParticipant(Long participantId) {
@@ -155,6 +173,21 @@ public class TodoService {
         sortParticipants(ownerParticipant, participants);
         List<Allocator> allocators = findTodo.getAllocators();
         return getAllocatorResponses(ownerParticipant, participants, allocators);
+    }
+
+    private User getUser(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND));
+    }
+
+    private Trip getTrip(Long tripId) {
+        return tripRepository.findById(tripId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.TRIP_NOT_FOUND));
+    }
+
+    private Participant getOwnerParticipant(User findUser, Trip findTrip) {
+        return participantRepository.findByUserAndTrip(findUser, findTrip)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.PARTICIPANT_NOT_FOUND));
     }
 
     private List<TodoAllocatorResponse> getAllocatorResponses(Long userId, List<Allocator> allocators) {
