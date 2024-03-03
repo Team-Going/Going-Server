@@ -1,8 +1,11 @@
 package org.doorip.trip.dto.response;
 
+import lombok.AccessLevel;
+import lombok.Builder;
 import org.doorip.trip.domain.Participant;
 import org.doorip.user.domain.User;
 
+@Builder(access = AccessLevel.PRIVATE)
 public record TripParticipantProfileResponse(
         String name,
         String intro,
@@ -17,16 +20,16 @@ public record TripParticipantProfileResponse(
 ) {
 
     public static TripParticipantProfileResponse of(User user, int validatedResult, Participant participant, boolean isOwner) {
-        return new TripParticipantProfileResponse(
-                user.getName(),
-                user.getIntro(),
-                validatedResult,
-                participant.getStyleA(),
-                participant.getStyleB(),
-                participant.getStyleC(),
-                participant.getStyleD(),
-                participant.getStyleE(),
-                isOwner
-        );
+        return TripParticipantProfileResponse.builder()
+                .name(user.getName())
+                .intro(user.getIntro())
+                .result(validatedResult)
+                .styleA(participant.getStyleA())
+                .styleB(participant.getStyleB())
+                .styleC(participant.getStyleC())
+                .styleD(participant.getStyleD())
+                .styleE(participant.getStyleE())
+                .isOwner(isOwner)
+                .build();
     }
 }

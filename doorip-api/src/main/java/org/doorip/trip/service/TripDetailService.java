@@ -83,7 +83,7 @@ public class TripDetailService {
         Participant findParticipant = getParticipantById(participantId);
         User participantUser = findParticipant.getUser();
         boolean isOwner = isEqualUserAndParticipantUser(findUser, participantUser);
-        int validatedResult = getvalidatedResult(participantUser);
+        int validatedResult = getValidatedResult(participantUser);
         return TripParticipantProfileResponse.of(participantUser, validatedResult, findParticipant, isOwner);
     }
 
@@ -208,7 +208,7 @@ public class TripDetailService {
         return user.equals(participantUser);
     }
 
-    private int getvalidatedResult(User user) {
+    private int getValidatedResult(User user) {
         try {
             return user.getResult().getNumResult();
         } catch (NullPointerException e) {
