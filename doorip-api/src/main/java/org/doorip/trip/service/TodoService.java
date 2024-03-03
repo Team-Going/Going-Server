@@ -8,11 +8,13 @@ import org.doorip.message.ErrorMessage;
 import org.doorip.trip.domain.*;
 import org.doorip.trip.dto.request.TodoCreateRequest;
 import org.doorip.trip.dto.response.TodoAllocatorResponse;
+import org.doorip.trip.dto.response.TodoDetailAllocatorResponse;
 import org.doorip.trip.dto.response.TodoDetailGetResponse;
 import org.doorip.trip.dto.response.TodoGetResponse;
 import org.doorip.trip.repository.ParticipantRepository;
 import org.doorip.trip.repository.TodoRepository;
 import org.doorip.trip.repository.TripRepository;
+import org.doorip.user.domain.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,9 +27,9 @@ import static org.doorip.trip.domain.Allocator.createAllocator;
 @Transactional(readOnly = true)
 @Service
 public class TodoService {
+    private final TodoRepository todoRepository;
     private final TripRepository tripRepository;
     private final ParticipantRepository participantRepository;
-    private final TodoRepository todoRepository;
 
     @Transactional
     public void createTripTodo(Long tripId, TodoCreateRequest request) {
@@ -43,10 +45,10 @@ public class TodoService {
         return getTripTodosResponse(userId, todos);
     }
 
-    public TodoDetailGetResponse getTripTodo(Long userId, Long todoId) {
+    public TodoDetailGetResponse getTripTodo(Long userId, Long tripId, Long todoId) {
+        Trip findTrip = getTrip(tripId);
         Todo findTodo = getTodo(todoId);
-        List<TodoAllocatorResponse> allocatorResponses = getAndSortAllocatorsResponses(userId, findTodo);
-        return TodoDetailGetResponse.of(findTodo, allocatorResponses);
+        return getTripTodoResponse(userId, findTrip, findTodo);
     }
 
     @Transactional
@@ -70,11 +72,6 @@ public class TodoService {
         if (allocators.isEmpty()) {
             throw new InvalidValueException(ErrorMessage.INVALID_ALLOCATOR_COUNT);
         }
-    }
-
-    private Trip getTrip(Long tripId) {
-        return tripRepository.findById(tripId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.TRIP_NOT_FOUND));
     }
 
     private Todo createTodo(TodoCreateRequest request, Trip trip) {
@@ -104,6 +101,16 @@ public class TodoService {
             response.add(TodoGetResponse.of(todo, allocatorResponses));
         });
         return response;
+    }
+
+    private Trip getTrip(Long tripId) {
+        return tripRepository.findById(tripId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.TRIP_NOT_FOUND));
+    }
+
+    private TodoDetailGetResponse getTripTodoResponse(Long userId, Trip findTrip, Todo findTodo) {
+        List<TodoDetailAllocatorResponse> allocatorResponses = getAndSortAllocatorResponses(userId, findTrip, findTodo);
+        return TodoDetailGetResponse.of(findTodo, allocatorResponses);
     }
 
     private Todo getTodo(Long todoId) {
@@ -142,6 +149,13 @@ public class TodoService {
         return allocatorResponses;
     }
 
+    private List<TodoDetailAllocatorResponse> getAndSortAllocatorResponses(Long userId, Trip findTrip, Todo findTodo) {
+        List<Participant> participants = findTrip.getParticipants();
+        Participant ownerParticipant = getOwnerParticipant(userId, participants);
+        sortParticipants(ownerParticipant, participants);
+        List<Allocator> allocators = findTodo.getAllocators();
+        return getAllocatorResponses(ownerParticipant, participants, allocators);
+    }
 
     private List<TodoAllocatorResponse> getAllocatorResponses(Long userId, List<Allocator> allocators) {
         return new ArrayList<>(allocators.stream()
@@ -159,7 +173,44 @@ public class TodoService {
     private void sortAllocators(TodoAllocatorResponse ownerAllocator, List<TodoAllocatorResponse> allocatorResponses) {
         if (ownerAllocator != null) {
             allocatorResponses.remove(ownerAllocator);
-            allocatorResponses.add(0, ownerAllocator);
+            allocatorResponses.add(Constants.TODO_OWNER_POSITION, ownerAllocator);
         }
+    }
+
+    private Participant getOwnerParticipant(Long userId, List<Participant> participants) {
+        return participants.stream()
+                .filter(participant -> isOwnerParticipant(userId, participant))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private void sortParticipants(Participant ownerParticipant, List<Participant> participants) {
+        if (ownerParticipant != null) {
+            participants.remove(ownerParticipant);
+            participants.add(Constants.TODO_OWNER_POSITION, ownerParticipant);
+        }
+    }
+
+    private List<TodoDetailAllocatorResponse> getAllocatorResponses(Participant ownerParticipant, List<Participant> participants, List<Allocator> allocators) {
+        return participants.stream()
+                .map(participant -> {
+                    boolean isAllocated = allocators.stream()
+                            .anyMatch(allocator -> isAllocatedParticipant(allocator, participant));
+                    User findUser = participant.getUser();
+                    return TodoDetailAllocatorResponse.of(findUser.getName(), participant == ownerParticipant, isAllocated, participant);
+                })
+                .toList();
+    }
+
+    private boolean isOwnerParticipant(Long userId, Participant participant) {
+        User findUser = participant.getUser();
+        Long findUserId = findUser.getId();
+        return findUserId.equals(userId);
+    }
+
+    private boolean isAllocatedParticipant(Allocator allocator, Participant participant) {
+        Participant findParticipant = allocator.getParticipant();
+        Long findParticipantId = findParticipant.getId();
+        return findParticipantId.equals(participant.getId());
     }
 }
