@@ -130,6 +130,10 @@ public interface TodoApi {
                             content = @Content),
                     @ApiResponse(
                             responseCode = "404",
+                            description = "존재하지 않는 여행입니다.",
+                            content = @Content),
+                    @ApiResponse(
+                            responseCode = "404",
                             description = "존재하지 않는 여행 TODO입니다.",
                             content = @Content),
                     @ApiResponse(
@@ -142,6 +146,7 @@ public interface TodoApi {
                             content = @Content)})
     ResponseEntity<BaseResponse<?>> getTripTodo(@Parameter(hidden = true)
                                                 @UserId final Long userId,
+                                                @PathVariable final Long tripId,
                                                 @PathVariable final Long todoId);
 
     @Operation(

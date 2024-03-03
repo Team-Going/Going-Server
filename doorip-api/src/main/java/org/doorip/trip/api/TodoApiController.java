@@ -39,11 +39,12 @@ public class TodoApiController implements TodoApi {
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
-    @GetMapping("/todos/{todoId}")
+    @GetMapping("/{tripId}/todos/{todoId}")
     @Override
     public ResponseEntity<BaseResponse<?>> getTripTodo(@UserId final Long userId,
+                                                       @PathVariable final Long tripId,
                                                        @PathVariable final Long todoId) {
-        final TodoDetailGetResponse response = todoService.getTripTodo(userId, todoId);
+        final TodoDetailGetResponse response = todoService.getTripTodo(userId, tripId, todoId);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
