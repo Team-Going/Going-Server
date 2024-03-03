@@ -6,10 +6,7 @@ import org.doorip.exception.EntityNotFoundException;
 import org.doorip.message.ErrorMessage;
 import org.doorip.trip.domain.*;
 import org.doorip.trip.dto.request.ParticipantUpdateRequest;
-import org.doorip.trip.dto.response.MyTodoResponse;
-import org.doorip.trip.dto.response.OurTodoResponse;
-import org.doorip.trip.dto.response.TripParticipantGetResponse;
-import org.doorip.trip.dto.response.TripStyleResponse;
+import org.doorip.trip.dto.response.*;
 import org.doorip.trip.repository.ParticipantRepository;
 import org.doorip.trip.repository.TodoRepository;
 import org.doorip.trip.repository.TripRepository;
@@ -79,6 +76,15 @@ public class TripDetailService {
         Trip findTrip = getTrip(tripId);
         Participant findParticipant = getParticipant(findUser, findTrip);
         findParticipant.updateStyles(request.styleA(), request.styleB(), request.styleC(), request.styleD(), request.styleE());
+    }
+
+    public TripParticipantProfileResponse getParticipantProfile(Long userId, Long participantId) {
+        User findUser = getUser(userId);
+        Participant findParticipant = getParticipantById(participantId);
+        User participantUser = findParticipant.getUser();
+        boolean isOwner = isEqualUserAndParticipantUser(findUser, participantUser);
+        int validatedResult = getvalidatedResult(participantUser);
+        return TripParticipantProfileResponse.of(participantUser, validatedResult, findParticipant, isOwner);
     }
 
     private Map<String, Integer> createDefaultPropensity() {
@@ -191,5 +197,22 @@ public class TripDetailService {
             rate = MAX_STYLE_RATE - rate;
         }
         return rate;
+    }
+
+    private Participant getParticipantById(Long id) {
+        return participantRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.PARTICIPANT_NOT_FOUND));
+    }
+
+    private boolean isEqualUserAndParticipantUser(User user, User participantUser) {
+        return user.equals(participantUser);
+    }
+
+    private int getvalidatedResult(User user) {
+        try {
+            return user.getResult().getNumResult();
+        } catch (NullPointerException e) {
+            return -1;
+        }
     }
 }
