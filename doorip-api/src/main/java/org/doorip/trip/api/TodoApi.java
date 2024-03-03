@@ -30,7 +30,11 @@ public interface TodoApi {
                             content = @Content),
                     @ApiResponse(
                             responseCode = "400",
-                            description = "여행 TODO를 생성하기 위해 최소 1명 이상의 배정자가 필요합니다.",
+                            description = "여행 MY TODO의 배정자가 누락되었습니다.",
+                            content = @Content),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "여행 MY TODO의 배정자 번호가 잘못되었습니다.",
                             content = @Content),
                     @ApiResponse(
                             responseCode = "401",
@@ -60,7 +64,9 @@ public interface TodoApi {
                             responseCode = "500",
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
-    ResponseEntity<BaseResponse<?>> createTripTodo(@PathVariable final Long tripId,
+    ResponseEntity<BaseResponse<?>> createTripTodo(@Parameter(hidden = true)
+                                                   @UserId final Long userId,
+                                                   @PathVariable final Long tripId,
                                                    @RequestBody final TodoCreateRequest request);
 
     @Operation(
