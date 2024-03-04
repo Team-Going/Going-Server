@@ -102,4 +102,11 @@ public class TripApiController implements TripApi {
         tripDetailService.updateParticipant(userId, tripId, request);
         return ApiResponseUtil.success(SuccessMessage.OK);
     }
+
+    @GetMapping("/participants/{participantId}")
+    public ResponseEntity<BaseResponse<?>> getParticipantProfile(@PathVariable final Long participantId,
+                                                                 @UserId final Long userId) {
+        final TripParticipantProfileResponse response = tripDetailService.getParticipantProfile(userId, participantId);
+        return ApiResponseUtil.success(SuccessMessage.OK, response);
+    }
 }
