@@ -6,11 +6,12 @@ import org.doorip.exception.EntityNotFoundException;
 import org.doorip.exception.InvalidValueException;
 import org.doorip.message.ErrorMessage;
 import org.doorip.trip.domain.*;
-import org.doorip.trip.dto.request.TodoCreateRequest;
+import org.doorip.trip.dto.request.TodoCreateAndUpdateRequest;
 import org.doorip.trip.dto.response.TodoAllocatorResponse;
 import org.doorip.trip.dto.response.TodoDetailAllocatorResponse;
 import org.doorip.trip.dto.response.TodoDetailGetResponse;
 import org.doorip.trip.dto.response.TodoGetResponse;
+import org.doorip.trip.repository.AllocatorRepository;
 import org.doorip.trip.repository.ParticipantRepository;
 import org.doorip.trip.repository.TodoRepository;
 import org.doorip.trip.repository.TripRepository;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.doorip.trip.domain.Allocator.createAllocator;
+import static org.doorip.trip.domain.Todo.createTodo;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -31,13 +33,15 @@ public class TodoService {
     private final TodoRepository todoRepository;
     private final TripRepository tripRepository;
     private final ParticipantRepository participantRepository;
+    private final AllocatorRepository allocatorRepository;
     private final UserRepository userRepository;
 
     @Transactional
-    public void createTripTodo(Long userId, Long tripId, TodoCreateRequest request) {
+    public void createTripTodo(Long userId, Long tripId, TodoCreateAndUpdateRequest request) {
         validateAllocators(request.secret(), userId, tripId, request.allocators());
         Trip findTrip = getTrip(tripId);
-        Todo todo = createTodo(request, findTrip);
+        Todo todo = createTodo(request.title(), request.endDate(), request.memo(),
+                Secret.of(request.secret()), findTrip);
         createAllocators(request.allocators(), todo);
         todoRepository.save(todo);
     }
@@ -51,6 +55,16 @@ public class TodoService {
         Trip findTrip = getTrip(tripId);
         Todo findTodo = getTodo(todoId);
         return getTripTodoResponse(userId, findTrip, findTodo);
+    }
+
+    @Transactional
+    public void updateTripTodo(Long userId, Long tripId, Long todoId, TodoCreateAndUpdateRequest request) {
+        validateAllocators(request.secret(), userId, tripId, request.allocators());
+        Todo findTodo = getTodo(todoId);
+        List<Allocator> allocators = getAllocatorsFromTodo(findTodo);
+        allocatorRepository.deleteAll(allocators);
+        findTodo.updateTodo(request.title(), request.endDate(), request.memo(), Secret.of(request.secret()));
+        createAllocators(request.allocators(), findTodo);
     }
 
     @Transactional
@@ -68,25 +82,6 @@ public class TodoService {
     public void incompleteTripTodo(Long todoId) {
         Todo findTodo = getTodo(todoId);
         findTodo.incomplete();
-    }
-
-    private void validateAllocators(boolean isSecret, Long userId, Long tripId, List<Long> allocators) {
-        if (isSecret) {
-            validateAllocatorCount(allocators);
-            Long findOwnerParticipantId = getOwnerParticipantId(userId, tripId);
-            validateAllocatorId(findOwnerParticipantId, allocators);
-        }
-    }
-
-    private Todo createTodo(TodoCreateRequest request, Trip trip) {
-        return Todo.createTodo(request.title(), request.endDate(), request.memo(), Secret.of(request.secret()), trip);
-    }
-
-    private void createAllocators(List<Long> allocators, Todo todo) {
-        allocators.forEach(participantId -> {
-            Participant findParticipant = getParticipant(participantId);
-            createAllocator(todo, findParticipant);
-        });
     }
 
     private List<Todo> getTripTodosAccordingToCategoryAndProgress(Long userId, Long tripId, String category, String progress) {
@@ -110,6 +105,25 @@ public class TodoService {
     private TodoDetailGetResponse getTripTodoResponse(Long userId, Trip findTrip, Todo findTodo) {
         List<TodoDetailAllocatorResponse> allocatorResponses = getAndSortAllocatorResponses(userId, findTrip, findTodo);
         return TodoDetailGetResponse.of(findTodo, allocatorResponses);
+    }
+
+    private void validateAllocators(boolean isSecret, Long userId, Long tripId, List<Long> allocators) {
+        if (isSecret) {
+            validateAllocatorCount(allocators);
+            Long findOwnerParticipantId = getOwnerParticipantId(userId, tripId);
+            validateAllocatorId(findOwnerParticipantId, allocators);
+        }
+    }
+
+    private List<Allocator> getAllocatorsFromTodo(Todo findTodo) {
+        return allocatorRepository.findByTodo(findTodo);
+    }
+
+    private void createAllocators(List<Long> allocators, Todo todo) {
+        allocators.forEach(participantId -> {
+            Participant findParticipant = getParticipant(participantId);
+            createAllocator(todo, findParticipant);
+        });
     }
 
     private Todo getTodo(Long todoId) {
