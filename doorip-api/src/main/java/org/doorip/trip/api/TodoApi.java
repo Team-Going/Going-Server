@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.doorip.auth.UserId;
 import org.doorip.common.BaseResponse;
-import org.doorip.trip.dto.request.TodoCreateRequest;
+import org.doorip.trip.dto.request.TodoCreateAndUpdateRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -67,7 +67,7 @@ public interface TodoApi {
     ResponseEntity<BaseResponse<?>> createTripTodo(@Parameter(hidden = true)
                                                    @UserId final Long userId,
                                                    @PathVariable final Long tripId,
-                                                   @RequestBody final TodoCreateRequest request);
+                                                   @RequestBody final TodoCreateAndUpdateRequest request);
 
     @Operation(
             summary = "여행 TODO 전체 조회 API",

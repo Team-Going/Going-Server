@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 import java.util.List;
 
-public record TodoCreateRequest(
+public record TodoCreateAndUpdateRequest(
         String title,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd", timezone = "Asia/Seoul")
         LocalDate endDate,
