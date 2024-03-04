@@ -5,7 +5,7 @@ import org.doorip.auth.UserId;
 import org.doorip.common.ApiResponseUtil;
 import org.doorip.common.BaseResponse;
 import org.doorip.message.SuccessMessage;
-import org.doorip.trip.dto.request.TodoCreateRequest;
+import org.doorip.trip.dto.request.TodoCreateAndUpdateRequest;
 import org.doorip.trip.dto.response.TodoDetailGetResponse;
 import org.doorip.trip.dto.response.TodoGetResponse;
 import org.doorip.trip.service.TodoService;
@@ -25,7 +25,7 @@ public class TodoApiController implements TodoApi {
     @Override
     public ResponseEntity<BaseResponse<?>> createTripTodo(@UserId final Long userId,
                                                           @PathVariable final Long tripId,
-                                                          @RequestBody final TodoCreateRequest request) {
+                                                          @RequestBody final TodoCreateAndUpdateRequest request) {
         todoService.createTripTodo(userId, tripId, request);
         return ApiResponseUtil.success(SuccessMessage.CREATED);
     }
@@ -47,6 +47,15 @@ public class TodoApiController implements TodoApi {
                                                        @PathVariable final Long todoId) {
         final TodoDetailGetResponse response = todoService.getTripTodo(userId, tripId, todoId);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
+    }
+
+    @PatchMapping("/{tripId}/todos/{todoId}")
+    public ResponseEntity<BaseResponse<?>> updateTripTodo(@UserId final Long userId,
+                                                          @PathVariable final Long tripId,
+                                                          @PathVariable final Long todoId,
+                                                          @RequestBody final TodoCreateAndUpdateRequest request) {
+        todoService.updateTripTodo(userId, tripId, todoId, request);
+        return ApiResponseUtil.success(SuccessMessage.OK);
     }
 
     @DeleteMapping("/todos/{todoId}")
