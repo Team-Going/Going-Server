@@ -71,4 +71,11 @@ public class Todo extends BaseTimeEntity {
     public void incomplete() {
         this.progress = Progress.INCOMPLETE;
     }
+
+    public void updateTodo(String title, LocalDate endDate, String memo, Secret secret) {
+        this.title = title;
+        this.endDate = endDate;
+        this.memo = memo;
+        this.secret = secret;
+    }
 }
