@@ -36,7 +36,7 @@ public class TripApiController implements TripApi {
     @Override
     public ResponseEntity<BaseResponse<?>> getTrips(@UserId final Long userId,
                                                     @RequestParam final String progress) {
-        final TripGetResponse response = tripService.getTrips(userId, progress);
+        final TripsGetResponse response = tripService.getTrips(userId, progress);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
@@ -85,6 +85,13 @@ public class TripApiController implements TripApi {
                                                      @PathVariable final Long tripId) {
         tripDetailService.leaveTrip(userId, tripId);
         return ApiResponseUtil.success(SuccessMessage.OK);
+    }
+
+    @GetMapping("/{tripId}")
+    public ResponseEntity<BaseResponse<?>> getTrip(@PathVariable final Long tripId,
+                                                      @UserId final Long userId) {
+        final TripGetResponse response = tripService.getTrip(userId, tripId);
+        return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
     @PatchMapping("/{tripId}")
