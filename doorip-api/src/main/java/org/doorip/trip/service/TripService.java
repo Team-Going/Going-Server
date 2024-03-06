@@ -17,6 +17,7 @@ import org.doorip.trip.dto.response.TripCreateResponse;
 import org.doorip.trip.dto.response.TripEntryResponse;
 import org.doorip.trip.dto.response.TripGetResponse;
 import org.doorip.trip.dto.response.TripResponse;
+import org.doorip.trip.dto.response.TripsGetResponse;
 import org.doorip.trip.repository.ParticipantRepository;
 import org.doorip.trip.repository.TripRepository;
 import org.doorip.user.domain.User;
@@ -66,6 +67,13 @@ public class TripService {
     public TripResponse verifyCode(TripVerifyRequest request) {
         Trip trip = getTrip(request.code());
         return TripResponse.of(trip);
+    }
+
+    public TripGetResponse getTrip(Long userId, Long tripId) {
+        User findUser = getUser(userId);
+        Trip findTrip = getTrip(tripId);
+        validateParticipant(findUser, findTrip);
+        return TripGetResponse.of(findTrip);
     }
 
     @Transactional
