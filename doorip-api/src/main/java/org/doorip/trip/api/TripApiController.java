@@ -36,7 +36,7 @@ public class TripApiController implements TripApi {
     @Override
     public ResponseEntity<BaseResponse<?>> getTrips(@UserId final Long userId,
                                                     @RequestParam final String progress) {
-        final TripGetResponse response = tripService.getTrips(userId, progress);
+        final TripsGetResponse response = tripService.getTrips(userId, progress);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 

@@ -7,12 +7,12 @@ import org.doorip.trip.domain.Trip;
 import java.util.List;
 
 @Builder(access = AccessLevel.PRIVATE)
-public record TripGetResponse(
+public record TripsGetResponse(
         String name,
         List<TripResponse> trips
 ) {
-    public static TripGetResponse of(String name, List<Trip> trips) {
-        return TripGetResponse.builder()
+    public static TripsGetResponse of(String name, List<Trip> trips) {
+        return TripsGetResponse.builder()
                 .name(name)
                 .trips(trips.stream()
                         .map(TripResponse::of)

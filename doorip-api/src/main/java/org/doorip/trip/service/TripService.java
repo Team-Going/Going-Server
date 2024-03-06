@@ -57,10 +57,10 @@ public class TripService {
         return TripEntryResponse.of(findTrip);
     }
 
-    public TripGetResponse getTrips(Long userId, String progress) {
+    public TripsGetResponse getTrips(Long userId, String progress) {
         User findUser = getUser(userId);
         List<Trip> trips = getTripsAccordingToProgress(userId, progress);
-        return TripGetResponse.of(findUser.getName(), trips);
+        return TripsGetResponse.of(findUser.getName(), trips);
     }
 
     public TripResponse verifyCode(TripVerifyRequest request) {
