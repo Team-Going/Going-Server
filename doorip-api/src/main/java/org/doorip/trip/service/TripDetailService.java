@@ -209,10 +209,11 @@ public class TripDetailService {
     }
 
     private int getValidatedResult(User user) {
-        try {
-            return user.getResult().getNumResult();
-        } catch (NullPointerException e) {
+        if (user.getResult() == null) {
             return -1;
+        }
+        else {
+            return user.getResult().getNumResult();
         }
     }
 }
