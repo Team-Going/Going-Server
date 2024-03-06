@@ -87,6 +87,13 @@ public class TripApiController implements TripApi {
         return ApiResponseUtil.success(SuccessMessage.OK);
     }
 
+    @GetMapping("/{tripId}")
+    public ResponseEntity<BaseResponse<?>> getTrip(@PathVariable final Long tripId,
+                                                      @UserId final Long userId) {
+        final TripGetResponse response = tripService.getTrip(userId, tripId);
+        return ApiResponseUtil.success(SuccessMessage.OK, response);
+    }
+
     @PatchMapping("/{tripId}")
     public ResponseEntity<BaseResponse<?>> updateTrip(@PathVariable final Long tripId,
                                                       @UserId final Long userId,
