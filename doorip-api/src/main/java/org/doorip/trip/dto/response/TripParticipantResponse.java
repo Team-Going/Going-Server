@@ -16,7 +16,7 @@ public record TripParticipantResponse(
         return TripParticipantResponse.builder()
                 .participantId(participant.getId())
                 .name(user.getName())
-                .result(user.getResult().getNumResult())
+                .result(user.getResult() == null ? -1 : user.getResult().getNumResult())
                 .build();
     }
 }
