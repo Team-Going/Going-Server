@@ -210,10 +210,8 @@ public class TripDetailService {
 
     private int getValidatedResult(User user) {
         if (user.getResult() == null) {
-            return -1;
+            return USER_RESULT_NULL;
         }
-        else {
-            return user.getResult().getNumResult();
-        }
+        return user.getResult().getNumResult();
     }
 }
