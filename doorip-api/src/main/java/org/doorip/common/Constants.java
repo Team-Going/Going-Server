@@ -19,5 +19,4 @@ public abstract class Constants {
     public static final int MAX_PARTICIPANT_COUNT = 6;
     public static final int MIN_PARTICIPANT_COUNT = 1;
     public static final int TODO_OWNER_POSITION = 0;
-    public static final int USER_RESULT_NULL = -1;
 }
