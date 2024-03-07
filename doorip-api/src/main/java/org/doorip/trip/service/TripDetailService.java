@@ -4,9 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.doorip.common.Constants;
 import org.doorip.exception.EntityNotFoundException;
 import org.doorip.message.ErrorMessage;
+import org.doorip.trip.actor.TripTendencyTestActor;
+import org.doorip.trip.actor.TripTendencyTestResult;
 import org.doorip.trip.domain.*;
 import org.doorip.trip.dto.request.ParticipantUpdateRequest;
-import org.doorip.trip.dto.response.*;
+import org.doorip.trip.dto.response.MyTodoResponse;
+import org.doorip.trip.dto.response.OurTodoResponse;
+import org.doorip.trip.dto.response.TripParticipantGetResponse;
+import org.doorip.trip.dto.response.TripParticipantProfileResponse;
 import org.doorip.trip.repository.ParticipantRepository;
 import org.doorip.trip.repository.TodoRepository;
 import org.doorip.trip.repository.TripRepository;
@@ -17,15 +22,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 
 import static java.lang.Math.round;
-import static org.doorip.common.Constants.*;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
 public class TripDetailService {
+    private final TripTendencyTestActor tripTendencyTestActor;
     private final UserRepository userRepository;
     private final TripRepository tripRepository;
     private final TodoRepository todoRepository;
@@ -54,8 +60,8 @@ public class TripDetailService {
         List<Participant> participants = findTrip.getParticipants();
         Participant ownerParticipant = getOwnerParticipant(userId, participants);
         sortParticipants(participants, ownerParticipant);
-        List<TripStyleResponse> response = calculateAndGetPropensityAverageRates(participants);
-        return TripParticipantGetResponse.of(participants, response);
+        TripTendencyTestResult result = tripTendencyTestActor.calculateTripTendencyTest(participants);
+        return TripParticipantGetResponse.of(result.bestPrefer(), participants, result.styles());
     }
 
     @Transactional
@@ -85,12 +91,6 @@ public class TripDetailService {
         boolean isOwner = isEqualUserAndParticipantUser(findUser, participantUser);
         int validatedResult = getValidatedResult(participantUser);
         return TripParticipantProfileResponse.of(participantUser, validatedResult, findParticipant, isOwner);
-    }
-
-    private Map<String, Integer> createDefaultPropensity() {
-        return new HashMap<>(Map.of(STYLE_A, MIN_STYLE_RATE, STYLE_B, MIN_STYLE_RATE,
-                STYLE_C, MIN_STYLE_RATE, STYLE_D, MIN_STYLE_RATE, STYLE_E, MIN_STYLE_RATE)) {
-        };
     }
 
     private int getIncompleteTodoCount(Long userId, Long tripId) {
@@ -125,15 +125,6 @@ public class TripDetailService {
         return round(((float) completeTodoCount / totalTodoCount) * 100);
     }
 
-    private List<TripStyleResponse> calculateAndGetPropensityAverageRates(List<Participant> participants) {
-        int participantCount = participants.size();
-        Map<String, Integer> propensity = getDefaultPropensity(participants);
-        List<String> keys = sortPropensityKeys(propensity);
-        List<TripStyleResponse> response = new ArrayList<>();
-        calculateAndSetPropensityAverageRate(keys, propensity, participantCount, response);
-        return response;
-    }
-
     private User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND));
@@ -161,42 +152,6 @@ public class TripDetailService {
 
     private boolean isOwnerParticipant(Long userId, User user) {
         return Objects.equals(user.getId(), userId);
-    }
-
-    private Map<String, Integer> getDefaultPropensity(List<Participant> participants) {
-        Map<String, Integer> propensity = createDefaultPropensity();
-        participants.forEach(participant -> setDefaultPropensity(participant, propensity));
-        return propensity;
-    }
-
-    private List<String> sortPropensityKeys(Map<String, Integer> propensity) {
-        List<String> keys = new ArrayList<>(propensity.keySet());
-        Collections.sort(keys);
-        return keys;
-    }
-
-    private void calculateAndSetPropensityAverageRate(List<String> keys, Map<String, Integer> propensity, int participantCount, List<TripStyleResponse> response) {
-        keys.forEach(key -> {
-            int rate = round((float) propensity.get(key) / participantCount);
-            boolean isLeft = rate <= MAX_STYLE_RATE - rate;
-            rate = calculatePropensityWeight(isLeft, rate);
-            response.add(TripStyleResponse.of(rate, isLeft));
-        });
-    }
-
-    private void setDefaultPropensity(Participant participant, Map<String, Integer> propensity) {
-        propensity.put(STYLE_A, propensity.get(STYLE_A) + participant.getStyleA() * PROPENSITY_WEIGHT);
-        propensity.put(STYLE_B, propensity.get(STYLE_B) + participant.getStyleB() * PROPENSITY_WEIGHT);
-        propensity.put(STYLE_C, propensity.get(STYLE_C) + participant.getStyleC() * PROPENSITY_WEIGHT);
-        propensity.put(STYLE_D, propensity.get(STYLE_D) + participant.getStyleD() * PROPENSITY_WEIGHT);
-        propensity.put(STYLE_E, propensity.get(STYLE_E) + participant.getStyleE() * PROPENSITY_WEIGHT);
-    }
-
-    private int calculatePropensityWeight(boolean isLeft, int rate) {
-        if (isLeft) {
-            rate = MAX_STYLE_RATE - rate;
-        }
-        return rate;
     }
 
     private Participant getParticipantById(Long id) {
