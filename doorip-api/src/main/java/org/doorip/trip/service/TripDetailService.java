@@ -68,7 +68,7 @@ public class TripDetailService {
     public void leaveTrip(Long userId, Long tripId) {
         User findUser = getUser(userId);
         Trip findTrip = getTrip(tripId);
-        int size = calculateParticipantsCount(findTrip);
+        int size = participantRepository.countByTrip(findTrip);
         Participant findParticipant = getParticipant(findUser, findTrip);
         List<Todo> todos = todoRepository.findMyTodoByTripIdAndUserIdAndSecret(tripId, userId, Secret.MY);
         todoRepository.deleteAll(todos);
@@ -130,10 +130,6 @@ public class TripDetailService {
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND));
     }
 
-    private int calculateParticipantsCount(Trip findTrip) {
-        return findTrip.getParticipants().size();
-    }
-
     private Participant getParticipant(User findUser, Trip findTrip) {
         return participantRepository.findByUserAndTrip(findUser, findTrip)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.PARTICIPANT_NOT_FOUND));
@@ -166,8 +162,7 @@ public class TripDetailService {
     private int getValidatedResult(User user) {
         if (user.getResult() == null) {
             return -1;
-        }
-        else {
+        } else {
             return user.getResult().getNumResult();
         }
     }
