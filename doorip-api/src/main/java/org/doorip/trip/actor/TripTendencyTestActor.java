@@ -29,12 +29,13 @@ public class TripTendencyTestActor {
     );
 
     public TripTendencyTestResult calculateTripTendencyTest(List<Participant> participants) {
-        List<List<Integer>> styles = generateStyles();
+        List<List<Integer>> rates = generateStyles();
+        List<List<Integer>> counts = generateStyles();
         int participantCount = participants.size();
-        accumulateStyles(participants, styles);
-        List<String> bestPrefer = calculateBestPrefer(styles, participantCount);
-        calculateStyleAverage(styles, participantCount);
-        return TripTendencyTestResult.of(bestPrefer, styles);
+        accumulateCounts(participants, counts);
+        List<String> bestPrefer = calculateBestPrefer(counts, participantCount);
+        calculateRatesAverage(rates, counts, participantCount);
+        return TripTendencyTestResult.of(bestPrefer, rates, counts);
     }
 
     private List<List<Integer>> generateStyles() {
@@ -44,43 +45,47 @@ public class TripTendencyTestActor {
         return styles;
     }
 
-    private void accumulateStyles(List<Participant> participants, List<List<Integer>> styles) {
+    private void accumulateCounts(List<Participant> participants, List<List<Integer>> counts) {
         participants.forEach(participant -> {
-            accumulateStyle(styles, participant.getStyleA(), 0);
-            accumulateStyle(styles, participant.getStyleB(), 1);
-            accumulateStyle(styles, participant.getStyleC(), 2);
-            accumulateStyle(styles, participant.getStyleD(), 3);
-            accumulateStyle(styles, participant.getStyleE(), 4);
+            accumulateCount(counts, participant.getStyleA(), 0);
+            accumulateCount(counts, participant.getStyleB(), 1);
+            accumulateCount(counts, participant.getStyleC(), 2);
+            accumulateCount(counts, participant.getStyleD(), 3);
+            accumulateCount(counts, participant.getStyleE(), 4);
         });
     }
 
-    private List<String> calculateBestPrefer(List<List<Integer>> styles, int participantCount) {
+    private List<String> calculateBestPrefer(List<List<Integer>> counts, int participantCount) {
         List<String> bestPrefer = new ArrayList<>();
         IntStream.range(INITIALIZATION, HIGH_RANGE_STYLES)
                 .forEach(i -> {
-                    List<Integer> style = styles.get(i);
-                    if (style.contains(participantCount)) {
+                    List<Integer> count = counts.get(i);
+                    if (count.contains(participantCount)) {
                         bestPrefer.add(prefer.get(i));
                     }
                 });
         return bestPrefer;
     }
 
-    private void calculateStyleAverage(List<List<Integer>> styles, int participantCount) {
+    private void calculateRatesAverage(List<List<Integer>> rates, List<List<Integer>> counts, int participantCount) {
         double percentage = 100.0 / participantCount;
-        styles.forEach(style ->
-                IntStream.range(INITIALIZATION, HIGH_RANGE_STYLE)
-                        .forEach(i -> style.set(i, (int) Math.floor(style.get(i) * percentage))));
+        IntStream.range(INITIALIZATION, HIGH_RANGE_STYLES)
+                .forEach(i -> {
+                    List<Integer> rate = rates.get(i);
+                    List<Integer> count = counts.get(i);
+                    IntStream.range(INITIALIZATION, HIGH_RANGE_STYLE)
+                            .forEach(j -> rate.set(j, (int) Math.floor(count.get(j) * percentage)));
+                });
     }
 
-    private void accumulateStyle(List<List<Integer>> styles, int styleValue, int pos) {
-        List<Integer> style = styles.get(pos);
+    private void accumulateCount(List<List<Integer>> counts, int styleValue, int pos) {
+        List<Integer> count = counts.get(pos);
         if (styleValue < CENTER_POS) {
-            style.set(0, style.get(0) + 1);
+            count.set(0, count.get(0) + 1);
         } else if (styleValue == CENTER_POS) {
-            style.set(1, style.get(1) + 1);
+            count.set(1, count.get(1) + 1);
         } else {
-            style.set(2, style.get(2) + 1);
+            count.set(2, count.get(2) + 1);
         }
     }
 }
