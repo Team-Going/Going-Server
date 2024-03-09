@@ -25,8 +25,10 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
             "from Todo d " +
             "join Trip i " +
             "on d.trip = i " +
+            "join Allocator a " +
+            "on a.todo = d " +
             "join Participant p " +
-            "on p.trip = i " +
+            "on a.participant = p " +
             "join User u " +
             "on p.user = u " +
             "where i.id = :tripId " +

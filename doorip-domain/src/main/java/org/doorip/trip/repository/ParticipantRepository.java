@@ -11,4 +11,6 @@ public interface ParticipantRepository extends JpaRepository<Participant, Long> 
     boolean existsByUserAndTrip(User user, Trip trip);
 
     Optional<Participant> findByUserAndTrip(User user, Trip trip);
+
+    int countByTrip(Trip trip);
 }
