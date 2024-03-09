@@ -61,7 +61,7 @@ public class TripDetailService {
         Participant ownerParticipant = getOwnerParticipant(userId, participants);
         sortParticipants(participants, ownerParticipant);
         TripTendencyTestResult result = tripTendencyTestActor.calculateTripTendencyTest(participants);
-        return TripParticipantGetResponse.of(result.bestPrefer(), participants, result.styles());
+        return TripParticipantGetResponse.of(result.bestPrefer(), participants, result.rates(), result.counts());
     }
 
     @Transactional
@@ -166,8 +166,7 @@ public class TripDetailService {
     private int getValidatedResult(User user) {
         if (user.getResult() == null) {
             return -1;
-        }
-        else {
+        } else {
             return user.getResult().getNumResult();
         }
     }
