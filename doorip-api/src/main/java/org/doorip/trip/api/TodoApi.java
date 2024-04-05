@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.doorip.auth.UserId;
 import org.doorip.common.BaseResponse;
-import org.doorip.trip.dto.request.TodoCreateRequest;
+import org.doorip.trip.dto.request.TodoCreateAndUpdateRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +30,11 @@ public interface TodoApi {
                             content = @Content),
                     @ApiResponse(
                             responseCode = "400",
-                            description = "여행 TODO를 생성하기 위해 최소 1명 이상의 배정자가 필요합니다.",
+                            description = "여행 MY TODO의 배정자가 누락되었습니다.",
+                            content = @Content),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "여행 MY TODO의 배정자 번호가 잘못되었습니다.",
                             content = @Content),
                     @ApiResponse(
                             responseCode = "401",
@@ -60,8 +64,10 @@ public interface TodoApi {
                             responseCode = "500",
                             description = "서버 내부 오류입니다.",
                             content = @Content)})
-    ResponseEntity<BaseResponse<?>> createTripTodo(@PathVariable final Long tripId,
-                                                   @RequestBody final TodoCreateRequest request);
+    ResponseEntity<BaseResponse<?>> createTripTodo(@Parameter(hidden = true)
+                                                   @UserId final Long userId,
+                                                   @PathVariable final Long tripId,
+                                                   @RequestBody final TodoCreateAndUpdateRequest request);
 
     @Operation(
             summary = "여행 TODO 전체 조회 API",
@@ -130,6 +136,10 @@ public interface TodoApi {
                             content = @Content),
                     @ApiResponse(
                             responseCode = "404",
+                            description = "존재하지 않는 여행입니다.",
+                            content = @Content),
+                    @ApiResponse(
+                            responseCode = "404",
                             description = "존재하지 않는 여행 TODO입니다.",
                             content = @Content),
                     @ApiResponse(
@@ -142,6 +152,7 @@ public interface TodoApi {
                             content = @Content)})
     ResponseEntity<BaseResponse<?>> getTripTodo(@Parameter(hidden = true)
                                                 @UserId final Long userId,
+                                                @PathVariable final Long tripId,
                                                 @PathVariable final Long todoId);
 
     @Operation(

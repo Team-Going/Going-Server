@@ -1,35 +1,41 @@
 package org.doorip.trip.service;
 
 import lombok.RequiredArgsConstructor;
+import org.doorip.common.Constants;
 import org.doorip.exception.EntityNotFoundException;
 import org.doorip.message.ErrorMessage;
-import org.doorip.trip.domain.Participant;
-import org.doorip.trip.domain.Progress;
-import org.doorip.trip.domain.Secret;
-import org.doorip.trip.domain.Trip;
+import org.doorip.trip.actor.TripTendencyTestActor;
+import org.doorip.trip.actor.TripTendencyTestResult;
+import org.doorip.trip.domain.*;
+import org.doorip.trip.dto.request.ParticipantUpdateRequest;
 import org.doorip.trip.dto.response.MyTodoResponse;
 import org.doorip.trip.dto.response.OurTodoResponse;
 import org.doorip.trip.dto.response.TripParticipantGetResponse;
-import org.doorip.trip.dto.response.TripStyleResponse;
+import org.doorip.trip.dto.response.TripParticipantProfileResponse;
+import org.doorip.trip.repository.ParticipantRepository;
 import org.doorip.trip.repository.TodoRepository;
 import org.doorip.trip.repository.TripRepository;
 import org.doorip.user.domain.User;
+import org.doorip.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 
 import static java.lang.Math.round;
-import static org.doorip.common.Constants.*;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
 public class TripDetailService {
+    private final TripTendencyTestActor tripTendencyTestActor;
+    private final UserRepository userRepository;
     private final TripRepository tripRepository;
     private final TodoRepository todoRepository;
+    private final ParticipantRepository participantRepository;
 
     public MyTodoResponse getMyTodoDetail(Long userId, Long tripId) {
         Trip findTrip = getTrip(tripId);
@@ -54,14 +60,37 @@ public class TripDetailService {
         List<Participant> participants = findTrip.getParticipants();
         Participant ownerParticipant = getOwnerParticipant(userId, participants);
         sortParticipants(participants, ownerParticipant);
-        List<TripStyleResponse> response = calculateAndGetPropensityAverageRates(participants);
-        return TripParticipantGetResponse.of(participants, response);
+        TripTendencyTestResult result = tripTendencyTestActor.calculateTripTendencyTest(participants);
+        return TripParticipantGetResponse.of(result.bestPrefer(), participants, result.rates(), result.counts());
     }
 
-    private Map<String, Integer> createDefaultPropensity() {
-        return new HashMap<>(Map.of(STYLE_A, MIN_STYLE_RATE, STYLE_B, MIN_STYLE_RATE,
-                STYLE_C, MIN_STYLE_RATE, STYLE_D, MIN_STYLE_RATE, STYLE_E, MIN_STYLE_RATE)) {
-        };
+    @Transactional
+    public void leaveTrip(Long userId, Long tripId) {
+        User findUser = getUser(userId);
+        Trip findTrip = getTrip(tripId);
+        int size = participantRepository.countByTrip(findTrip);
+        Participant findParticipant = getParticipant(findUser, findTrip);
+        List<Todo> todos = todoRepository.findMyTodoByTripIdAndUserIdAndSecret(tripId, userId, Secret.MY);
+        todoRepository.deleteAll(todos);
+        participantRepository.delete(findParticipant);
+        deleteTripIfLastParticipant(size, findTrip);
+    }
+
+    @Transactional
+    public void updateParticipant(Long userId, Long tripId, ParticipantUpdateRequest request) {
+        User findUser = getUser(userId);
+        Trip findTrip = getTrip(tripId);
+        Participant findParticipant = getParticipant(findUser, findTrip);
+        findParticipant.updateStyles(request.styleA(), request.styleB(), request.styleC(), request.styleD(), request.styleE());
+    }
+
+    public TripParticipantProfileResponse getParticipantProfile(Long userId, Long participantId) {
+        User findUser = getUser(userId);
+        Participant findParticipant = getParticipantById(participantId);
+        User participantUser = findParticipant.getUser();
+        boolean isOwner = isEqualUserAndParticipantUser(findUser, participantUser);
+        int validatedResult = getValidatedResult(participantUser);
+        return TripParticipantProfileResponse.of(participantUser, validatedResult, findParticipant, isOwner);
     }
 
     private int getIncompleteTodoCount(Long userId, Long tripId) {
@@ -96,13 +125,20 @@ public class TripDetailService {
         return round(((float) completeTodoCount / totalTodoCount) * 100);
     }
 
-    private List<TripStyleResponse> calculateAndGetPropensityAverageRates(List<Participant> participants) {
-        int participantCount = participants.size();
-        Map<String, Integer> propensity = getDefaultPropensity(participants);
-        List<String> keys = sortPropensityKeys(propensity);
-        List<TripStyleResponse> response = new ArrayList<>();
-        calculateAndSetPropensityAverageRate(keys, propensity, participantCount, response);
-        return response;
+    private User getUser(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND));
+    }
+
+    private Participant getParticipant(User findUser, Trip findTrip) {
+        return participantRepository.findByUserAndTrip(findUser, findTrip)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.PARTICIPANT_NOT_FOUND));
+    }
+
+    private void deleteTripIfLastParticipant(int size, Trip trip) {
+        if (size == Constants.MIN_PARTICIPANT_COUNT) {
+            tripRepository.delete(trip);
+        }
     }
 
     private Trip getTrip(Long tripId) {
@@ -114,39 +150,20 @@ public class TripDetailService {
         return Objects.equals(user.getId(), userId);
     }
 
-    private Map<String, Integer> getDefaultPropensity(List<Participant> participants) {
-        Map<String, Integer> propensity = createDefaultPropensity();
-        participants.forEach(participant -> setDefaultPropensity(participant, propensity));
-        return propensity;
+    private Participant getParticipantById(Long id) {
+        return participantRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.PARTICIPANT_NOT_FOUND));
     }
 
-    private List<String> sortPropensityKeys(Map<String, Integer> propensity) {
-        List<String> keys = new ArrayList<>(propensity.keySet());
-        Collections.sort(keys);
-        return keys;
+    private boolean isEqualUserAndParticipantUser(User user, User participantUser) {
+        return user.equals(participantUser);
     }
 
-    private void calculateAndSetPropensityAverageRate(List<String> keys, Map<String, Integer> propensity, int participantCount, List<TripStyleResponse> response) {
-        keys.forEach(key -> {
-            int rate = round((float) propensity.get(key) / participantCount);
-            boolean isLeft = rate <= MAX_STYLE_RATE - rate;
-            rate = calculatePropensityWeight(isLeft, rate);
-            response.add(TripStyleResponse.of(rate, isLeft));
-        });
-    }
-
-    private void setDefaultPropensity(Participant participant, Map<String, Integer> propensity) {
-        propensity.put(STYLE_A, propensity.get(STYLE_A) + participant.getStyleA() * PROPENSITY_WEIGHT);
-        propensity.put(STYLE_B, propensity.get(STYLE_B) + participant.getStyleB() * PROPENSITY_WEIGHT);
-        propensity.put(STYLE_C, propensity.get(STYLE_C) + participant.getStyleC() * PROPENSITY_WEIGHT);
-        propensity.put(STYLE_D, propensity.get(STYLE_D) + participant.getStyleD() * PROPENSITY_WEIGHT);
-        propensity.put(STYLE_E, propensity.get(STYLE_E) + participant.getStyleE() * PROPENSITY_WEIGHT);
-    }
-
-    private int calculatePropensityWeight(boolean isLeft, int rate) {
-        if (isLeft) {
-            rate = MAX_STYLE_RATE - rate;
+    private int getValidatedResult(User user) {
+        if (user.getResult() == null) {
+            return -1;
+        } else {
+            return user.getResult().getNumResult();
         }
-        return rate;
     }
 }

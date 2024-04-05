@@ -19,7 +19,22 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
             "and d.progress = :progress " +
             "and d.secret = :secret " +
             "order by d.endDate")
-    List<Todo> findOurTodoByTripId(@Param("tripId") Long tripId, @Param("secret") Secret secret, @Param("progress") Progress progress);
+    List<Todo> findOurTodoByTripIdAndSecretAndProgress(@Param("tripId") Long tripId, @Param("secret") Secret secret, @Param("progress") Progress progress);
+
+    @Query("select d " +
+            "from Todo d " +
+            "join Trip i " +
+            "on d.trip = i " +
+            "join Allocator a " +
+            "on a.todo = d " +
+            "join Participant p " +
+            "on a.participant = p " +
+            "join User u " +
+            "on p.user = u " +
+            "where i.id = :tripId " +
+            "and u.id = :userId " +
+            "and d.secret = :secret")
+    List<Todo> findMyTodoByTripIdAndUserIdAndSecret(@Param("tripId") Long tripId, @Param("userId") Long userId, @Param("secret") Secret secret);
 
     @Query("select d " +
             "from Todo d " +
@@ -35,7 +50,7 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
             "and u.id = :userId " +
             "and d.progress = :progress " +
             "order by d.endDate")
-    List<Todo> findMyTodoByTripId(@Param("tripId") Long tripId, @Param("userId") Long userId, @Param("progress") Progress progress);
+    List<Todo> findMyTodoByTripIdAndUserIdAndProgress(@Param("tripId") Long tripId, @Param("userId") Long userId, @Param("progress") Progress progress);
 
     int countTodoByTripIdAndSecretAndProgress(Long tripId, Secret secret, Progress progress);
 

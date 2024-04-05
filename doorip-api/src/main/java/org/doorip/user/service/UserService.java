@@ -18,6 +18,7 @@ import org.doorip.user.dto.request.ResultUpdateRequest;
 import org.doorip.user.dto.request.UserReissueRequest;
 import org.doorip.user.dto.request.UserSignInRequest;
 import org.doorip.user.dto.request.UserSignUpRequest;
+import org.doorip.user.dto.request.ProfileUpdateRequest;
 import org.doorip.user.dto.response.ProfileGetResponse;
 import org.doorip.user.dto.response.UserSignInResponse;
 import org.doorip.user.dto.response.UserSignUpResponse;
@@ -108,6 +109,12 @@ public class UserService {
                 + oneTypeResult(mappedIndex.subList(6, 9), "P", "I");
         Result result = getEnumResultFromStringResult(stringResult);
         findUser.updateResult(result);
+    }
+
+    public void updateProfile(Long userId, ProfileUpdateRequest request) {
+        User findUser = getUser(userId);
+        findUser.updateName(request.name());
+        findUser.updateIntro(request.intro());
     }
 
     private void validateCompletedPropensityTest(User findUser) {

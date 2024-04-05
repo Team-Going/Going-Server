@@ -1,17 +1,12 @@
 package org.doorip.trip.dto.response;
 
-import lombok.AccessLevel;
-import lombok.Builder;
+import java.util.List;
 
-@Builder(access = AccessLevel.PRIVATE)
 public record TripStyleResponse(
-        int rate,
-        boolean isLeft
+        List<Integer> rates,
+        List<Integer> counts
 ) {
-    public static TripStyleResponse of(int rate, boolean isLeft) {
-        return TripStyleResponse.builder()
-                .rate(rate)
-                .isLeft(isLeft)
-                .build();
+    public static TripStyleResponse of(List<Integer> rates, List<Integer> counts) {
+        return new TripStyleResponse(rates, counts);
     }
 }

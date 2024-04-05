@@ -20,7 +20,7 @@ public enum Result {
     AEP(6, "AEP"),
     AEI(7, "AEI");
 
-    private final int numResult;
+    private final Integer numResult;
     private final String stringResult;
 
     public static Result getEnumResultFromStringResult(String stringResult) {

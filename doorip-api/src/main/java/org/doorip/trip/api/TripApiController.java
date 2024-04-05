@@ -2,12 +2,14 @@ package org.doorip.trip.api;
 
 import lombok.RequiredArgsConstructor;
 import org.doorip.auth.UserId;
-import org.doorip.common.BaseResponse;
 import org.doorip.common.ApiResponseUtil;
+import org.doorip.common.BaseResponse;
 import org.doorip.message.SuccessMessage;
 import org.doorip.trip.dto.request.TripCreateRequest;
 import org.doorip.trip.dto.request.TripEntryRequest;
+import org.doorip.trip.dto.request.TripUpdateRequest;
 import org.doorip.trip.dto.request.TripVerifyRequest;
+import org.doorip.trip.dto.request.ParticipantUpdateRequest;
 import org.doorip.trip.dto.response.*;
 import org.doorip.trip.service.TripDetailService;
 import org.doorip.trip.service.TripService;
@@ -34,7 +36,7 @@ public class TripApiController implements TripApi {
     @Override
     public ResponseEntity<BaseResponse<?>> getTrips(@UserId final Long userId,
                                                     @RequestParam final String progress) {
-        final TripGetResponse response = tripService.getTrips(userId, progress);
+        final TripsGetResponse response = tripService.getTrips(userId, progress);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
@@ -75,6 +77,43 @@ public class TripApiController implements TripApi {
     public ResponseEntity<BaseResponse<?>> getParticipants(@UserId final Long userId,
                                                            @PathVariable final Long tripId) {
         final TripParticipantGetResponse response = tripDetailService.getParticipants(userId, tripId);
+        return ApiResponseUtil.success(SuccessMessage.OK, response);
+    }
+
+    @PatchMapping("/{tripId}/leave")
+    public ResponseEntity<BaseResponse<?>> leaveTrip(@UserId final Long userId,
+                                                     @PathVariable final Long tripId) {
+        tripDetailService.leaveTrip(userId, tripId);
+        return ApiResponseUtil.success(SuccessMessage.OK);
+    }
+
+    @GetMapping("/{tripId}")
+    public ResponseEntity<BaseResponse<?>> getTrip(@PathVariable final Long tripId,
+                                                      @UserId final Long userId) {
+        final TripGetResponse response = tripService.getTrip(userId, tripId);
+        return ApiResponseUtil.success(SuccessMessage.OK, response);
+    }
+
+    @PatchMapping("/{tripId}")
+    public ResponseEntity<BaseResponse<?>> updateTrip(@PathVariable final Long tripId,
+                                                      @UserId final Long userId,
+                                                      @RequestBody final TripUpdateRequest request) {
+        tripService.updateTrip(userId, tripId, request);
+        return ApiResponseUtil.success(SuccessMessage.OK);
+    }
+
+    @PatchMapping("/{tripId}/participant")
+    public ResponseEntity<BaseResponse<?>> updateParticipant(@PathVariable final Long tripId,
+                                                             @UserId final Long userId,
+                                                             @RequestBody final ParticipantUpdateRequest request) {
+        tripDetailService.updateParticipant(userId, tripId, request);
+        return ApiResponseUtil.success(SuccessMessage.OK);
+    }
+
+    @GetMapping("/participants/{participantId}")
+    public ResponseEntity<BaseResponse<?>> getParticipantProfile(@PathVariable final Long participantId,
+                                                                 @UserId final Long userId) {
+        final TripParticipantProfileResponse response = tripDetailService.getParticipantProfile(userId, participantId);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 }

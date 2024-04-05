@@ -11,11 +11,13 @@ import org.doorip.trip.domain.Role;
 import org.doorip.trip.domain.Trip;
 import org.doorip.trip.dto.request.TripCreateRequest;
 import org.doorip.trip.dto.request.TripEntryRequest;
+import org.doorip.trip.dto.request.TripUpdateRequest;
 import org.doorip.trip.dto.request.TripVerifyRequest;
 import org.doorip.trip.dto.response.TripCreateResponse;
 import org.doorip.trip.dto.response.TripEntryResponse;
 import org.doorip.trip.dto.response.TripGetResponse;
 import org.doorip.trip.dto.response.TripResponse;
+import org.doorip.trip.dto.response.TripsGetResponse;
 import org.doorip.trip.repository.ParticipantRepository;
 import org.doorip.trip.repository.TripRepository;
 import org.doorip.user.domain.User;
@@ -56,15 +58,31 @@ public class TripService {
         return TripEntryResponse.of(findTrip);
     }
 
-    public TripGetResponse getTrips(Long userId, String progress) {
+    public TripsGetResponse getTrips(Long userId, String progress) {
         User findUser = getUser(userId);
         List<Trip> trips = getTripsAccordingToProgress(userId, progress);
-        return TripGetResponse.of(findUser.getName(), trips);
+        return TripsGetResponse.of(findUser.getName(), trips);
     }
 
     public TripResponse verifyCode(TripVerifyRequest request) {
         Trip trip = getTrip(request.code());
         return TripResponse.of(trip);
+    }
+
+    public TripGetResponse getTrip(Long userId, Long tripId) {
+        User findUser = getUser(userId);
+        Trip findTrip = getTrip(tripId);
+        validateParticipant(findUser, findTrip);
+        return TripGetResponse.of(findTrip);
+    }
+
+    @Transactional
+    public void updateTrip(Long userId, Long tripId, TripUpdateRequest request) {
+        User findUser = getUser(userId);
+        Trip findTrip = getTrip(tripId);
+        validateParticipant(findUser, findTrip);
+        findTrip.updateTitle(request.title());
+        findTrip.updateDate(request.startDate(), request.endDate());
     }
 
     private void validateDate(LocalDate startDate, LocalDate endDate) {
@@ -134,5 +152,11 @@ public class TripService {
 
     private boolean isDuplicateCode(String code) {
         return tripRepository.existsByCode(code);
+    }
+
+    private void validateParticipant(User user, Trip trip) {
+        if (!participantRepository.existsByUserAndTrip(user, trip)) {
+            throw new ConflictException(ErrorMessage.PARTICIPANT_NOT_FOUND);
+        }
     }
 }
