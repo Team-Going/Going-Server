@@ -13,4 +13,5 @@ public abstract class Constants {
     public static final int TODO_OWNER_POSITION = 0;
     public static final int START_STYLE_POS = 0;
     public static final int END_STYLE_POS = 5;
+    public static final String SIGN_UP_LOCK = "signup";
 }
