@@ -2,18 +2,14 @@ package org.doorip.user.api;
 
 import lombok.RequiredArgsConstructor;
 import org.doorip.auth.UserId;
-import org.doorip.common.BaseResponse;
 import org.doorip.common.ApiResponseUtil;
+import org.doorip.common.BaseResponse;
 import org.doorip.message.SuccessMessage;
-import org.doorip.user.dto.request.ResultUpdateRequest;
-import org.doorip.user.dto.request.UserReissueRequest;
-import org.doorip.user.dto.request.UserSignInRequest;
-import org.doorip.user.dto.request.UserSignUpRequest;
-import org.doorip.user.dto.request.ProfileUpdateRequest;
+import org.doorip.user.dto.request.*;
 import org.doorip.user.dto.response.ProfileGetResponse;
-import org.doorip.user.dto.response.UserSignUpResponse;
 import org.doorip.user.dto.response.UserSignInResponse;
-import org.doorip.user.service.UserService;
+import org.doorip.user.dto.response.UserSignUpResponse;
+import org.doorip.user.facade.UserFacade;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +20,12 @@ import static org.doorip.common.Constants.AUTHORIZATION;
 @RequestMapping("/api/users")
 @Controller
 public class UserApiController implements UserApi {
-    private final UserService userService;
+    private final UserFacade userFacade;
 
     @GetMapping("/splash")
     @Override
     public ResponseEntity<BaseResponse<?>> splash(@UserId final Long userId) {
-        userService.splash(userId);
+        userFacade.splash(userId);
         return ApiResponseUtil.success(SuccessMessage.OK);
     }
 
@@ -37,7 +33,7 @@ public class UserApiController implements UserApi {
     @Override
     public ResponseEntity<BaseResponse<?>> signIn(@RequestHeader(AUTHORIZATION) final String token,
                                                   @RequestBody final UserSignInRequest request) {
-        final UserSignInResponse response = userService.signIn(token, request);
+        final UserSignInResponse response = userFacade.signIn(token, request);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
@@ -45,21 +41,21 @@ public class UserApiController implements UserApi {
     @Override
     public ResponseEntity<BaseResponse<?>> signUp(@RequestHeader(AUTHORIZATION) final String token,
                                                   @RequestBody final UserSignUpRequest request) {
-        final UserSignUpResponse response = userService.signUp(token, request);
+        final UserSignUpResponse response = userFacade.signUp(token, request);
         return ApiResponseUtil.success(SuccessMessage.CREATED, response);
     }
 
     @PatchMapping("/signout")
     @Override
     public ResponseEntity<BaseResponse<?>> signOut(@UserId final Long userId) {
-        userService.signOut(userId);
+        userFacade.signOut(userId);
         return ApiResponseUtil.success(SuccessMessage.OK);
     }
 
     @DeleteMapping("/withdraw")
     @Override
     public ResponseEntity<BaseResponse<?>> withdraw(@UserId final Long userId) {
-        userService.withdraw(userId);
+        userFacade.withdraw(userId);
         return ApiResponseUtil.success(SuccessMessage.OK);
     }
 
@@ -67,14 +63,14 @@ public class UserApiController implements UserApi {
     @Override
     public ResponseEntity<BaseResponse<?>> reissue(@RequestHeader(AUTHORIZATION) final String refreshtoken,
                                                    @RequestBody final UserReissueRequest request) {
-        final UserSignUpResponse response = userService.reissue(refreshtoken, request);
+        final UserSignUpResponse response = userFacade.reissue(refreshtoken, request);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
     @GetMapping("/profile")
     @Override
     public ResponseEntity<BaseResponse<?>> getProfile(@UserId final Long userId) {
-        final ProfileGetResponse response = userService.getProfile(userId);
+        final ProfileGetResponse response = userFacade.getProfile(userId);
         return ApiResponseUtil.success(SuccessMessage.OK, response);
     }
 
@@ -82,14 +78,14 @@ public class UserApiController implements UserApi {
     @Override
     public ResponseEntity<BaseResponse<?>> updateResult(@UserId final Long userId,
                                                         @RequestBody final ResultUpdateRequest request) {
-        userService.updateResult(userId, request);
+        userFacade.updateResult(userId, request);
         return ApiResponseUtil.success(SuccessMessage.OK);
     }
 
     @PatchMapping("/profile")
     public ResponseEntity<BaseResponse<?>> updateProfile(@UserId final Long userId,
                                                          @RequestBody final ProfileUpdateRequest request) {
-        userService.updateProfile(userId, request);
+        userFacade.updateProfile(userId, request);
         return ApiResponseUtil.success(SuccessMessage.OK);
     }
 }
