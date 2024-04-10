@@ -41,3 +41,4 @@ out/
 
 ### Yml ###
 doorip-api/src/main/resources/application.yml
+doorip-api/src/test/resources/application.yml
