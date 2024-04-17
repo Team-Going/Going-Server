@@ -43,7 +43,7 @@ jobs:
         with:
           username: ubuntu
           host: ${{ secrets.EC2_PROD_HOST }}
-          key: ${{ secrets.EC2_KEY }}
+          key: ${{ secrets.EC2_PROD_KEY }}
           port: ${{ secrets.EC2_PORT }}
           source: "./scripts/deploy.sh"
           target: "/home/ubuntu/"
@@ -53,7 +53,7 @@ jobs:
         with:
           username: ubuntu
           host: ${{ secrets.EC2_PROD_HOST }}
-          key: ${{ secrets.EC2_KEY }}
+          key: ${{ secrets.EC2_PROD_KEY }}
           port: ${{ secrets.EC2_PORT }}
           source: "./docker-compose.yml"
           target: "/home/ubuntu/"
@@ -71,7 +71,7 @@ jobs:
         with:
           username: ubuntu
           host: ${{ secrets.EC2_PROD_HOST }}
-          key: ${{ secrets.EC2_KEY }}
+          key: ${{ secrets.EC2_PROD_KEY }}
           script: |
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}
             chmod 777 ./scripts/deploy.sh
