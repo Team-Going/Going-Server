@@ -1,0 +1,13 @@
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation project(path: ':doorip-common')
+    implementation project(path: ':doorip-external')
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
