@@ -3,3 +3,6 @@ include 'doorip-api'
 include 'doorip-domain'
 include 'doorip-common'
 include 'doorip-external'
+include 'doorip-event-publisher'
+include 'doorip-event-subscriber'
+

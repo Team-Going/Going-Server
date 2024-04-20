@@ -1,10 +1,9 @@
 package org.doorip.config;
 
-import org.doorip.ExternalRoot;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableFeignClients(basePackageClasses = ExternalRoot.class)
+@EnableFeignClients(basePackages = "org.doorip")
 public class FeignClientConfig {
 }

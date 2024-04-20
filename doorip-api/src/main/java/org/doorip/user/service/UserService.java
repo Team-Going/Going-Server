@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.doorip.auth.jwt.JwtProvider;
 import org.doorip.auth.jwt.JwtValidator;
 import org.doorip.auth.jwt.Token;
+import org.doorip.event.SignUpEvent;
 import org.doorip.exception.ConflictException;
 import org.doorip.exception.EntityNotFoundException;
 import org.doorip.exception.InvalidValueException;
@@ -11,14 +12,10 @@ import org.doorip.exception.UnauthorizedException;
 import org.doorip.message.ErrorMessage;
 import org.doorip.message.EventMessage;
 import org.doorip.openfeign.apple.AppleOAuthProvider;
-import org.doorip.openfeign.discord.DiscordMessageProvider;
 import org.doorip.openfeign.kakao.KakaoOAuthProvider;
+import org.doorip.publisher.EventPublisher;
 import org.doorip.user.domain.*;
-import org.doorip.user.dto.request.ResultUpdateRequest;
-import org.doorip.user.dto.request.UserReissueRequest;
-import org.doorip.user.dto.request.UserSignInRequest;
-import org.doorip.user.dto.request.UserSignUpRequest;
-import org.doorip.user.dto.request.ProfileUpdateRequest;
+import org.doorip.user.dto.request.*;
 import org.doorip.user.dto.response.ProfileGetResponse;
 import org.doorip.user.dto.response.UserSignInResponse;
 import org.doorip.user.dto.response.UserSignUpResponse;
@@ -46,7 +43,7 @@ public class UserService {
     private final JwtValidator jwtValidator;
     private final AppleOAuthProvider appleOAuthProvider;
     private final KakaoOAuthProvider kakaoOAuthProvider;
-    private final DiscordMessageProvider discordMessageProvider;
+    private final EventPublisher eventPublisher;
 
     @Transactional(readOnly = true)
     public void splash(Long userId) {
@@ -71,7 +68,8 @@ public class UserService {
         User savedUser = saveUser(request, platformId, enumPlatform);
         Token issueToken = jwtProvider.issueToken(savedUser.getId());
         updateRefreshToken(issueToken.refreshToken(), savedUser);
-        discordMessageProvider.sendMessage(EventMessage.SIGN_UP_EVENT);
+        int userCount = userRepository.countUser();
+        eventPublisher.publishSignUpEvent(SignUpEvent.of(EventMessage.SIGN_UP_EVENT, savedUser.getName(), userCount));
         return UserSignUpResponse.of(issueToken, savedUser.getId());
     }
 

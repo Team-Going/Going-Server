@@ -14,6 +14,8 @@ dependencies {
     implementation project(path: ':doorip-domain')
     implementation project(path: ':doorip-external')
     implementation project(path: ':doorip-common')
+    implementation project(path: ':doorip-event-publisher')
+    implementation project(path: ':doorip-event-subscriber')
 }
 
 jar {

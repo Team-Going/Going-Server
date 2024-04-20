@@ -4,7 +4,6 @@ import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.doorip.exception.InvalidValueException;
 import org.doorip.message.ErrorMessage;
-import org.doorip.message.EventMessage;
 import org.springframework.stereotype.Component;
 
 import static org.doorip.openfeign.discord.DiscordMessage.createDiscordMessage;
@@ -14,8 +13,8 @@ import static org.doorip.openfeign.discord.DiscordMessage.createDiscordMessage;
 public class DiscordMessageProvider {
     private final DiscordFeignClient discordFeignClient;
 
-    public void sendMessage(EventMessage eventMessage) {
-        DiscordMessage discordMessage = createDiscordMessage(eventMessage.getMessage());
+    public void sendMessage(String message) {
+        DiscordMessage discordMessage = createDiscordMessage(message);
         sendMessageToDiscord(discordMessage);
     }
 
