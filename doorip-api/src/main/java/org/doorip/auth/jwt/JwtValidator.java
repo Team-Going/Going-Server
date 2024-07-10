@@ -32,7 +32,7 @@ public class JwtValidator {
             Claims claims = parseToken(refreshToken);
             String issuer = claims.getIssuer();
             if (issuer.equals(JwtType.AT.toString())) {
-                throw new UnauthorizedException(ErrorMessage.INVALID_ACCESS_TOKEN_VALUE);
+                throw new UnauthorizedException(ErrorMessage.INVALID_REFRESH_TOKEN_VALUE);
             }
         } catch (ExpiredJwtException e) {
             throw new UnauthorizedException(ErrorMessage.EXPIRED_REFRESH_TOKEN);
