@@ -1,5 +1,6 @@
 package org.doorip.auth.jwt;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,11 @@ public class JwtValidator {
 
     public void validateAccessToken(String accessToken) {
         try {
-            parseToken(accessToken);
+            Claims claims = parseToken(accessToken);
+            String issuer = claims.getIssuer();
+            if (issuer.equals(JwtType.RT.toString())) {
+                throw new UnauthorizedException(ErrorMessage.INVALID_ACCESS_TOKEN_VALUE);
+            }
         } catch (ExpiredJwtException e) {
             throw new UnauthorizedException(ErrorMessage.EXPIRED_ACCESS_TOKEN);
         } catch (Exception e) {
@@ -24,7 +29,11 @@ public class JwtValidator {
 
     public void validateRefreshToken(String refreshToken) {
         try {
-            parseToken(refreshToken);
+            Claims claims = parseToken(refreshToken);
+            String issuer = claims.getIssuer();
+            if (issuer.equals(JwtType.AT.toString())) {
+                throw new UnauthorizedException(ErrorMessage.INVALID_REFRESH_TOKEN_VALUE);
+            }
         } catch (ExpiredJwtException e) {
             throw new UnauthorizedException(ErrorMessage.EXPIRED_REFRESH_TOKEN);
         } catch (Exception e) {
@@ -38,8 +47,9 @@ public class JwtValidator {
         }
     }
 
-    private void parseToken(String token) {
+    private Claims parseToken(String token) {
         JwtParser jwtParser = jwtGenerator.getJwtParser();
-        jwtParser.parseClaimsJws(token);
+        return jwtParser.parseClaimsJws(token)
+                .getBody();
     }
 }

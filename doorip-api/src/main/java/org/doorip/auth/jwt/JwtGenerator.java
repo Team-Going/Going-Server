@@ -27,6 +27,7 @@ public class JwtGenerator {
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setSubject(String.valueOf(userId))
+                .setIssuer(setIssuerBy(isAccessToken).toString())
                 .setIssuedAt(now)
                 .setExpiration(expiration)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -61,5 +62,12 @@ public class JwtGenerator {
     private String encodeSecretKey() {
         return Base64.getEncoder()
                 .encodeToString(secretKey.getBytes());
+    }
+
+    private JwtType setIssuerBy(boolean isAccessToken) {
+        if (isAccessToken) {
+            return JwtType.AT;
+        }
+        return JwtType.RT;
     }
 }
